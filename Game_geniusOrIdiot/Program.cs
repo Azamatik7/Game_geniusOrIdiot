@@ -45,5 +45,6 @@ namespace Game_geniusOrIdiot
             return diagnosises[cnt-1];
 
         }
+        //
     }
 }
