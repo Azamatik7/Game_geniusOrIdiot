@@ -101,12 +101,16 @@ namespace Game_geniusOrIdiot
             else if (action == "4")
             {
                 string recordsFile = "records.txt";
+                //File.WriteAllText("records.txt", string.Empty);
+
 
                 if (File.Exists(recordsFile))
                 {
-                    Console.WriteLine("=== РЕКОРДЫ ===");
+                    Console.WriteLine("================================ РЕКОРДЫ ==========================================");
                     Console.WriteLine();
+                    Console.WriteLine(" Имя пользователя                   Диагноз             кол-во правильных ответов");
                     string[] records = File.ReadAllLines(recordsFile);
+
                     foreach (string record in records)
                     {
                         Console.WriteLine(record);
@@ -263,7 +267,7 @@ namespace Game_geniusOrIdiot
         static void SaveRecord(string diagnos, int cnt,string nameOfUser)
         {
             string recordsFile = "records.txt";
-            string formatRecord = $"Пользователь -- {nameOfUser}-{diagnos} - с рекордом : {cnt}";
+            string formatRecord = $"    {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
             if (File.Exists(recordsFile))
             {
                 File.AppendAllText(recordsFile, formatRecord + Environment.NewLine);
