@@ -56,7 +56,7 @@ namespace Game_geniusOrIdiot
                 Console.WriteLine("Введите ответ к нему:");
                 string newAnswer = Console.ReadLine();
 
-                
+
                 List<string> newQuestions = new List<string>(bankOfQuestions);
                 List<string> newAnswers = new List<string>(correctAnswers);
 
@@ -66,7 +66,7 @@ namespace Game_geniusOrIdiot
                 bankOfQuestions = newQuestions.ToArray();
                 correctAnswers = newAnswers.ToArray();
 
-                
+
                 SaveToFile(questionsFile, bankOfQuestions, correctAnswers);
 
                 Console.WriteLine("Вопрос добавлен!");
@@ -76,12 +76,12 @@ namespace Game_geniusOrIdiot
                 Console.WriteLine("Напишите вопрос, который хотите удалить:");
                 string delQues = Console.ReadLine();
 
-                
+
                 for (int i = 0; i < bankOfQuestions.Length; i++)
                 {
                     if (bankOfQuestions[i] == delQues)
                     {
-                        
+
                         List<string> newQuestions = new List<string>(bankOfQuestions);
                         List<string> newAnswers = new List<string>(correctAnswers);
 
@@ -91,7 +91,7 @@ namespace Game_geniusOrIdiot
                         bankOfQuestions = newQuestions.ToArray();
                         correctAnswers = newAnswers.ToArray();
 
-                        
+
                         SaveToFile(questionsFile, bankOfQuestions, correctAnswers);
 
                         Console.WriteLine("Вопрос удален!");
@@ -109,14 +109,10 @@ namespace Game_geniusOrIdiot
                 {
                     Console.WriteLine("================================== РЕКОРДЫ ==========================================");
                     Console.WriteLine();
-                    Console.WriteLine(" Имя пользователя                   Диагноз             кол-во правильных ответов");
+                    Console.WriteLine(" Имя пользователя                 Диагноз              кол-во правильных ответов");
                     string[] records = File.ReadAllLines(recordsFile);
                     List<List<string>> strings = new List<List<string>>();
-                    //var sorted = records.OrderByDescending(x =>
-                    //{
-                    //    char lastChar = x.LastOrDefault();
-                    //    return char.IsDigit(lastChar) ? int.Parse(lastChar.ToString()) : 0;
-                    //}).ToArray();
+
 
                     foreach (string record in records)
                     {
@@ -128,181 +124,189 @@ namespace Game_geniusOrIdiot
                         strings.Add(currentUserdata);
                     }
                     List<List<string>> sortedUsers = new List<List<string>>();
-                    sortedUsers = strings.OrderByDescending(x  => int.Parse(x[2])).ToList();
-                    foreach (string[] userdata in sortedUsers) // вывод элементов форматированный 
+                    sortedUsers = strings.OrderByDescending(x => int.Parse(x[2])).ToList();
+                    if (sortedUsers.Count < 10)
                     {
-                        Console.WriteLine($"");
+                        for (int i = 0; i < sortedUsers.Count; i++)
+                        {
+                            Console.WriteLine($"   {sortedUsers[i][0],-32}{sortedUsers[i][1],-30}{sortedUsers[i][2],-25}");
+                        }
                     }
-
-                }
-                else
-                {
-                    Console.WriteLine("Рекордов пока нет!");
-                }
-                return;
-            }
-
-
-
-            Dictionary<string, string> queANs = GiveDictionary(bankOfQuestions, correctAnswers);
-
-
-            string nameOfUser = Greeting();
-
-
-            while (true)
-            {
-                Random rng = new Random();
-                // Перемешиваем вопросы прямо здесь
-                var shuffledQuestions = queANs
-                    .OrderBy(x => rng.Next())
-                    .ToDictionary(pair => pair.Key, pair => pair.Value);
-
-                int cnt = 0;
-                List<string> mark = new List<string>();
-
-                foreach (string s in shuffledQuestions.Keys)
-                {
-                    Console.WriteLine(s);
-                    string answer = Console.ReadLine();
-                    if (answer == shuffledQuestions[s])
+                    else if (sortedUsers.Count > 10) 
                     {
-                        cnt++;
-                        mark.Add("+");
+                        for (int i = 0; i < 10; i++)
+                        {
+                            Console.WriteLine($"   {sortedUsers[i][0],-32}{sortedUsers[i][1],-30}{sortedUsers[i][2],-25}");
+                        }
                     }
                     else
                     {
-                        mark.Add("-");
+                        Console.WriteLine("Рекордов пока нет!");
                     }
+                    return;
                 }
 
-                Result(cnt, mark, correctAnswers);
-                string diagnos = Diagnosis(cnt, bankOfQuestions);
-                Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(cnt, bankOfQuestions)}");
-                Console.WriteLine();
-                Console.WriteLine("Хотите сыграть заново?");
-                SaveRecord(diagnos, cnt, nameOfUser);
-                string choice = Console.ReadLine();
-                if (choice.ToLower() == "да")
+
+
+                Dictionary<string, string> queANs = GiveDictionary(bankOfQuestions, correctAnswers);
+
+
+                string nameOfUser = Greeting();
+
+
+                while (true)
                 {
-                    continue;
+                    Random rng = new Random();
+                    // Перемешиваем вопросы прямо здесь
+                    var shuffledQuestions = queANs
+                        .OrderBy(x => rng.Next())
+                        .ToDictionary(pair => pair.Key, pair => pair.Value);
+
+                    int cnt = 0;
+                    List<string> mark = new List<string>();
+
+                    foreach (string s in shuffledQuestions.Keys)
+                    {
+                        Console.WriteLine(s);
+                        string answer = Console.ReadLine();
+                        if (answer == shuffledQuestions[s])
+                        {
+                            cnt++;
+                            mark.Add("+");
+                        }
+                        else
+                        {
+                            mark.Add("-");
+                        }
+                    }
+
+                    Result(cnt, mark, correctAnswers);
+                    string diagnos = Diagnosis(cnt, bankOfQuestions);
+                    Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(cnt, bankOfQuestions)}");
+                    Console.WriteLine();
+                    Console.WriteLine("Хотите сыграть заново?");
+                    SaveRecord(diagnos, cnt, nameOfUser);
+                    string choice = Console.ReadLine();
+                    if (choice.ToLower() == "да")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+
+                        break;
+                    }
+
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Игра завершена. Удачи в следующий раз");
+            }
+
+
+            static string Diagnosis(int cnt, string[] bank)
+            {
+                string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
+                double rightAns = cnt;
+                double questionsNumber = bank.Length;
+                double percent = rightAns / questionsNumber * 100;
+                if (percent == 0)
+                {
+                    return diagnosises[0];
+                }
+                if (percent < 20)
+                {
+                    return diagnosises[1];
+                }
+                if (percent < 40)
+                {
+                    return diagnosises[2];
+                }
+                if (percent < 60)
+                {
+                    return diagnosises[3];
+                }
+                if (percent < 80)
+                {
+                    return diagnosises[4];
+                }
+                return diagnosises[5];
+
+
+            }
+            static void Result(int cnt, List<string> mark, string[] correctAnswers)
+            {
+                Console.WriteLine($"Ваше количество правильных ответов : {cnt}");
+                Console.WriteLine("Результаты:");
+                for (int i = 0; i < mark.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}){mark[i]}");
+                }
+            }
+
+            static string Greeting()
+            {
+                Console.WriteLine("Добро пожаловать в игру Гений-Идиот");
+                Console.WriteLine();
+                Console.WriteLine("Введите ваше имя:");
+                string name = Console.ReadLine();
+                return name;
+            }
+
+            static Dictionary<string, string> GiveDictionary(string[] bankOfQuestions, string[] correctAnswers)
+            {
+                Dictionary<string, string> queAns = new Dictionary<string, string>();
+                for (int i = 0; i < bankOfQuestions.Length; i++)
+                {
+                    queAns[bankOfQuestions[i]] = correctAnswers[i];
+                }
+                return queAns;
+            }
+            static string WhichAction()
+            {
+                string[] actions = { "Играть", "Добавить вопрос", "Удалить вопрос", "Рекорды" };
+                Console.WriteLine("Выберете номер действия:");
+                for (int i = 0; i < actions.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1} - {actions[i]}");
+                }
+                string choice = Console.ReadLine();
+                return choice;
+
+            }
+            static void SaveToFile(string filename, string[] questions, string[] answers)
+            {
+                List<string> lines = new List<string>();
+
+                for (int i = 0; i < questions.Length; i++)
+                {
+                    lines.Add(questions[i]);
+                    lines.Add(answers[i]);
+                }
+
+                File.WriteAllLines(filename, lines);
+                Console.WriteLine("Вопросы сохранены!");
+            }
+            static void SaveRecord(string diagnos, int cnt, string nameOfUser)
+            {
+                string recordsFile = "records.txt";
+                //string formatRecord = $"{nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+                string formatRecord = $"{nameOfUser}#{diagnos}#{cnt}";
+                if (File.Exists(recordsFile))
+                {
+                    File.AppendAllText(recordsFile, formatRecord + Environment.NewLine);
                 }
                 else
                 {
-                    
-                    break;
+                    File.WriteAllText(recordsFile, formatRecord + Environment.NewLine);
                 }
-               
             }
-            
-            Console.WriteLine();
-            Console.WriteLine("Игра завершена. Удачи в следующий раз");
-        }
+            static string WriteMe(string diagnos, int cnt, string nameOfUser)
+            {
+                string formatRecord = $"     {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+                return formatRecord;
 
-
-        static string Diagnosis(int cnt, string[] bank)
-        {
-            string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
-            double rightAns = cnt;
-            double questionsNumber = bank.Length;
-            double percent = rightAns / questionsNumber * 100;
-            if (percent == 0)
-            {
-                return diagnosises[0];
             }
-            if (percent < 20)
-            {
-                return diagnosises[1];
-            }
-            if (percent < 40)
-            {
-                return diagnosises[2];
-            }
-            if (percent < 60)
-            {
-                return diagnosises[3];
-            }
-            if (percent < 80)
-            {
-                return diagnosises[4];
-            }
-            return diagnosises[5];
-
 
         }
-        static void Result(int cnt, List<string> mark, string[] correctAnswers)
-        {
-            Console.WriteLine($"Ваше количество правильных ответов : {cnt}");
-            Console.WriteLine("Результаты:");
-            for (int i = 0; i < mark.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}){mark[i]}");
-            }
-        }
-
-        static string Greeting()
-        {
-            Console.WriteLine("Добро пожаловать в игру Гений-Идиот");
-            Console.WriteLine();
-            Console.WriteLine("Введите ваше имя:");
-            string name = Console.ReadLine();
-            return name;
-        }
-
-        static Dictionary<string, string> GiveDictionary(string[] bankOfQuestions, string[] correctAnswers)
-        {
-            Dictionary<string, string> queAns = new Dictionary<string, string>();
-            for (int i = 0; i < bankOfQuestions.Length; i++)
-            {
-                queAns[bankOfQuestions[i]] = correctAnswers[i];
-            }
-            return queAns;
-        }
-        static string WhichAction()
-        {
-            string[] actions = { "Играть", "Добавить вопрос", "Удалить вопрос", "Рекорды" };
-            Console.WriteLine("Выберете номер действия:");
-            for (int i = 0; i < actions.Length; i++)
-            {
-                Console.WriteLine($"{i + 1} - {actions[i]}");
-            }
-            string choice = Console.ReadLine();
-            return choice;
-
-        }
-        static void SaveToFile(string filename, string[] questions, string[] answers)
-        {
-            List<string> lines = new List<string>();
-
-            for (int i = 0; i < questions.Length; i++)
-            {
-                lines.Add(questions[i]);
-                lines.Add(answers[i]);
-            }
-
-            File.WriteAllLines(filename, lines);
-            Console.WriteLine("Вопросы сохранены!");
-        }
-        static void SaveRecord(string diagnos, int cnt,string nameOfUser)
-        {
-            string recordsFile = "records.txt";
-            //string formatRecord = $"{nameOfUser,-32}{diagnos,-30}{cnt,-25}";
-            string formatRecord = $"{nameOfUser}#{diagnos}#{cnt}";
-            if (File.Exists(recordsFile))
-            {
-                File.AppendAllText(recordsFile, formatRecord + Environment.NewLine);
-            }
-            else
-            {
-                File.WriteAllText(recordsFile, formatRecord + Environment.NewLine);
-            }
-        }
-        static string WriteMe(string diagnos, int cnt, string nameOfUser)
-        {
-            string formatRecord = $"    {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
-            return formatRecord;
-
-        }
-
     }
-}
