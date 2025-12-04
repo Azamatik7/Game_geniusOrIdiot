@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using System.Linq;
+using System.Globalization;
 namespace Game_geniusOrIdiot
 {
 
@@ -106,15 +107,33 @@ namespace Game_geniusOrIdiot
 
                 if (File.Exists(recordsFile))
                 {
-                    Console.WriteLine("================================ РЕКОРДЫ ==========================================");
+                    Console.WriteLine("================================== РЕКОРДЫ ==========================================");
                     Console.WriteLine();
                     Console.WriteLine(" Имя пользователя                   Диагноз             кол-во правильных ответов");
                     string[] records = File.ReadAllLines(recordsFile);
+                    List<List<string>> strings = new List<List<string>>();
+                    //var sorted = records.OrderByDescending(x =>
+                    //{
+                    //    char lastChar = x.LastOrDefault();
+                    //    return char.IsDigit(lastChar) ? int.Parse(lastChar.ToString()) : 0;
+                    //}).ToArray();
 
                     foreach (string record in records)
                     {
-                        Console.WriteLine(record);
+                        List<string> currentUserdata = new List<string>();
+                        string[] str = record.Split('#');// мы храним данные так ИмяПользователя#Диагноз#кол-во правильных ответов
+                        currentUserdata.Add(str[0]);
+                        currentUserdata.Add(str[1]);
+                        currentUserdata.Add(str[2]);
+                        strings.Add(currentUserdata);
                     }
+                    List<List<string>> sortedUsers = new List<List<string>>();
+                    sortedUsers = strings.OrderByDescending(x  => int.Parse(x[2])).ToList();
+                    foreach (string[] userdata in sortedUsers) // вывод элементов форматированный 
+                    {
+                        Console.WriteLine($"");
+                    }
+
                 }
                 else
                 {
@@ -267,7 +286,8 @@ namespace Game_geniusOrIdiot
         static void SaveRecord(string diagnos, int cnt,string nameOfUser)
         {
             string recordsFile = "records.txt";
-            string formatRecord = $"    {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+            //string formatRecord = $"{nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+            string formatRecord = $"{nameOfUser}#{diagnos}#{cnt}";
             if (File.Exists(recordsFile))
             {
                 File.AppendAllText(recordsFile, formatRecord + Environment.NewLine);
@@ -276,6 +296,12 @@ namespace Game_geniusOrIdiot
             {
                 File.WriteAllText(recordsFile, formatRecord + Environment.NewLine);
             }
+        }
+        static string WriteMe(string diagnos, int cnt, string nameOfUser)
+        {
+            string formatRecord = $"    {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+            return formatRecord;
+
         }
 
     }
