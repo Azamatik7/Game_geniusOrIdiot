@@ -25,6 +25,7 @@ namespace Game_geniusOrIdiot
                 };
             string[] correctAnswers = { "4", "3", "6", "60", "9", "мяу" };
 
+
             if (File.Exists(questionsFile))
             {
                 string[] lines = File.ReadAllLines(questionsFile);
@@ -132,7 +133,7 @@ namespace Game_geniusOrIdiot
                             Console.WriteLine($"   {sortedUsers[i][0],-32}{sortedUsers[i][1],-30}{sortedUsers[i][2],-25}");
                         }
                     }
-                    else if (sortedUsers.Count > 10) 
+                    else if (sortedUsers.Count > 10)
                     {
                         for (int i = 0; i < 10; i++)
                         {
@@ -145,63 +146,63 @@ namespace Game_geniusOrIdiot
                     }
                     return;
                 }
+            }
 
 
 
-                Dictionary<string, string> queANs = GiveDictionary(bankOfQuestions, correctAnswers);
+            Dictionary<string, string> queANs = GiveDictionary(bankOfQuestions, correctAnswers);
 
 
-                string nameOfUser = Greeting();
+            string nameOfUser = Greeting();
 
 
-                while (true)
+            while (true)
+            {
+                Random rng = new Random();
+                // Перемешиваем вопросы прямо здесь
+                var shuffledQuestions = queANs
+                    .OrderBy(x => rng.Next())
+                    .ToDictionary(pair => pair.Key, pair => pair.Value);
+
+                int cnt = 0;
+                List<string> mark = new List<string>();
+
+                foreach (string s in shuffledQuestions.Keys)
                 {
-                    Random rng = new Random();
-                    // Перемешиваем вопросы прямо здесь
-                    var shuffledQuestions = queANs
-                        .OrderBy(x => rng.Next())
-                        .ToDictionary(pair => pair.Key, pair => pair.Value);
-
-                    int cnt = 0;
-                    List<string> mark = new List<string>();
-
-                    foreach (string s in shuffledQuestions.Keys)
+                    Console.WriteLine(s);
+                    string answer = Console.ReadLine();
+                    if (answer == shuffledQuestions[s])
                     {
-                        Console.WriteLine(s);
-                        string answer = Console.ReadLine();
-                        if (answer == shuffledQuestions[s])
-                        {
-                            cnt++;
-                            mark.Add("+");
-                        }
-                        else
-                        {
-                            mark.Add("-");
-                        }
-                    }
-
-                    Result(cnt, mark, correctAnswers);
-                    string diagnos = Diagnosis(cnt, bankOfQuestions);
-                    Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(cnt, bankOfQuestions)}");
-                    Console.WriteLine();
-                    Console.WriteLine("Хотите сыграть заново?");
-                    SaveRecord(diagnos, cnt, nameOfUser);
-                    string choice = Console.ReadLine();
-                    if (choice.ToLower() == "да")
-                    {
-                        continue;
+                        cnt++;
+                        mark.Add("+");
                     }
                     else
                     {
-
-                        break;
+                        mark.Add("-");
                     }
-
                 }
 
+                Result(cnt, mark, correctAnswers);
+                string diagnos = Diagnosis(cnt, bankOfQuestions);
+                Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(cnt, bankOfQuestions)}");
                 Console.WriteLine();
-                Console.WriteLine("Игра завершена. Удачи в следующий раз");
+                Console.WriteLine("Хотите сыграть заново?");
+                SaveRecord(diagnos, cnt, nameOfUser);
+                string choice = Console.ReadLine();
+                if (choice.ToLower() == "да")
+                {
+                    continue;
+                }
+                else
+                {
+
+                    break;
+                }
+
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Игра завершена. Удачи в следующий раз");
 
 
             static string Diagnosis(int cnt, string[] bank)
@@ -290,7 +291,7 @@ namespace Game_geniusOrIdiot
             static void SaveRecord(string diagnos, int cnt, string nameOfUser)
             {
                 string recordsFile = "records.txt";
-                //string formatRecord = $"{nameOfUser,-32}{diagnos,-30}{cnt,-25}";
+
                 string formatRecord = $"{nameOfUser}#{diagnos}#{cnt}";
                 if (File.Exists(recordsFile))
                 {
@@ -310,3 +311,6 @@ namespace Game_geniusOrIdiot
 
         }
     }
+}
+
+
