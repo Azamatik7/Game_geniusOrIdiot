@@ -1,25 +1,67 @@
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+
 namespace GeniusAndIdiotWinFormsApp
 {
     public partial class Form1 : Form
     {
-        string[] bankOfQuestions =
-                {
-                "—колько океанов на планете «емл€?",
-                "ќдно €йцо варитс€ 3 минуты,сколько минут вар€тс€ три €йца?",
-                "—колько будет два плюс два умножить на два?",
-                "”кол делают каждые полчаса.—колько минут,сделать три укола?",
-                "Ѕревно нужно распилить на 10 частей.—колько распилов нужно сделать?",
-                "м€у?"
-                };
-        string[] correctAnswers = { "4", "3", "6", "60", "9", "м€у" };
+        private List<string> bankOfQuestions = new List<string>
+        {
+            "—колько океанов на планете «емл€?",
+            "ќдно €йцо варитс€ 3 минуты,сколько минут вар€тс€ три €йца?",
+            "—колько будет два плюс два умножить на два?",
+            "”кол делают каждые полчаса.—колько минут нужно,чтобы сделать три укола?",
+            "Ѕревно нужно распилить на 10 частей.—колько распилов нужно сделать?",
+            "м€у?"
+        };
+        int i = 1;
+        int rightAnswersCount = 0;
+
+        private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "м€у" };
+        Random rng = new Random();
+        int curentQuestionIndex;
         public Form1()
         {
             InitializeComponent();
+
+
         }
 
-        private void questionNumberlabel_Click(object sender, EventArgs e)
+        private void Submitbutton_Click(object sender, EventArgs e)
         {
+
             
+
+            if (userAnswerTextBox.Text == correctAnswers[curentQuestionIndex])
+            {
+                rightAnswersCount++;
+            }
+
+
+            bankOfQuestions.RemoveAt(curentQuestionIndex);
+            correctAnswers.RemoveAt(curentQuestionIndex);
+            if (bankOfQuestions.Count == 0)
+            {
+                userAnswerTextBox.Text = "";
+                questionLabel.Text = "¬се!";
+                MessageBox.Show($" оличество правильных ответов: {rightAnswersCount}");
+                Submitbutton.Enabled = false;
+                return;
+            }
+            curentQuestionIndex = rng.Next(bankOfQuestions.Count());
+            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+            
+            i++;
+            questionNumberlabel.Text = $"¬опрос {i}";
+
+            userAnswerTextBox.Text = "";
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            questionNumberlabel.Text = $"¬опрос {i}";
+
+            curentQuestionIndex = rng.Next(bankOfQuestions.Count);
+            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
         }
     }
 }

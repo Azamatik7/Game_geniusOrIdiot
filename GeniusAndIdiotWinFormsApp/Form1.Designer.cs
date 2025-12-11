@@ -43,7 +43,6 @@
             questionNumberlabel.Size = new Size(82, 20);
             questionNumberlabel.TabIndex = 0;
             questionNumberlabel.Text = "Вопрос 1";
-            questionNumberlabel.Click += questionNumberlabel_Click;
             // 
             // userAnswerTextBox
             // 
@@ -60,12 +59,15 @@
             Submitbutton.TabIndex = 2;
             Submitbutton.Text = "ОТВЕТИТЬ";
             Submitbutton.UseVisualStyleBackColor = true;
+            Submitbutton.Click += Submitbutton_Click;
             // 
             // questionLabel
             // 
+            questionLabel.AutoEllipsis = true;
             questionLabel.AutoSize = true;
             questionLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            questionLabel.Location = new Point(52, 50);
+            questionLabel.Location = new Point(61, 54);
+            questionLabel.MaximumSize = new Size(200, 0);
             questionLabel.Name = "questionLabel";
             questionLabel.Size = new Size(70, 21);
             questionLabel.TabIndex = 3;
@@ -75,13 +77,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(296, 290);
+            ClientSize = new Size(334, 348);
             Controls.Add(questionLabel);
             Controls.Add(Submitbutton);
             Controls.Add(userAnswerTextBox);
             Controls.Add(questionNumberlabel);
             Name = "Form1";
             Text = "Form1";
+            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
