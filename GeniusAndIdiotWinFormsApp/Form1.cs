@@ -13,6 +13,7 @@ namespace GeniusAndIdiotWinFormsApp
             "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
             "мяу?"
         };
+        int lenBank;
         int i = 1;
         int rightAnswersCount = 0;
 
@@ -22,6 +23,7 @@ namespace GeniusAndIdiotWinFormsApp
         public Form1()
         {
             InitializeComponent();
+            lenBank = bankOfQuestions.Count;
 
 
         }
@@ -44,6 +46,7 @@ namespace GeniusAndIdiotWinFormsApp
                 userAnswerTextBox.Text = "";
                 questionLabel.Text = "Все!";
                 MessageBox.Show($"Количество правильных ответов: {rightAnswersCount}");
+                MessageBox.Show($"Ваш диагноз:{Diagnosis(rightAnswersCount, lenBank)}");
                 Submitbutton.Enabled = false;
                 return;
             }
@@ -62,6 +65,37 @@ namespace GeniusAndIdiotWinFormsApp
 
             curentQuestionIndex = rng.Next(bankOfQuestions.Count);
             questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+        }
+
+        static string Diagnosis(int cnt,int len)
+        {
+            string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
+            double rightAns = cnt;
+            double questionsNumber = len;
+            double percent = rightAns / questionsNumber * 100;
+            if (percent == 0)
+            {
+                return diagnosises[0];
+            }
+            if (percent < 20)
+            {
+                return diagnosises[1];
+            }
+            if (percent < 40)
+            {
+                return diagnosises[2];
+            }
+            if (percent < 60)
+            {
+                return diagnosises[3];
+            }
+            if (percent < 80)
+            {
+                return diagnosises[4];
+            }
+            return diagnosises[5];
+
+
         }
     }
 }

@@ -38,7 +38,7 @@
             // 
             questionNumberlabel.AutoSize = true;
             questionNumberlabel.Font = new Font("Bookman Old Style", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            questionNumberlabel.Location = new Point(93, 21);
+            questionNumberlabel.Location = new Point(115, 19);
             questionNumberlabel.Name = "questionNumberlabel";
             questionNumberlabel.Size = new Size(82, 20);
             questionNumberlabel.TabIndex = 0;
@@ -46,14 +46,14 @@
             // 
             // userAnswerTextBox
             // 
-            userAnswerTextBox.Location = new Point(52, 145);
+            userAnswerTextBox.Location = new Point(61, 141);
             userAnswerTextBox.Name = "userAnswerTextBox";
             userAnswerTextBox.Size = new Size(177, 23);
             userAnswerTextBox.TabIndex = 1;
             // 
             // Submitbutton
             // 
-            Submitbutton.Location = new Point(77, 199);
+            Submitbutton.Location = new Point(90, 206);
             Submitbutton.Name = "Submitbutton";
             Submitbutton.Size = new Size(120, 47);
             Submitbutton.TabIndex = 2;
@@ -66,7 +66,7 @@
             questionLabel.AutoEllipsis = true;
             questionLabel.AutoSize = true;
             questionLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            questionLabel.Location = new Point(61, 54);
+            questionLabel.Location = new Point(61, 59);
             questionLabel.MaximumSize = new Size(200, 0);
             questionLabel.Name = "questionLabel";
             questionLabel.Size = new Size(70, 21);
