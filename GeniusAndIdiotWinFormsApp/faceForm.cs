@@ -19,9 +19,14 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void acceptButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(userNameTextBox.Text+" проверим Гений ты или Идиот?", "", MessageBoxButtons.OK);
+            MessageBox.Show(userNameTextBox.Text + " проверим Гений ты или Идиот?", "", MessageBoxButtons.OK);
             Form1 form1 = new Form1();
             form1.ShowDialog();
+        }
+
+        private void nameLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

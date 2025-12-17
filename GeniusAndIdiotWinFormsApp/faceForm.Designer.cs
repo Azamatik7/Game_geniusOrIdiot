@@ -37,33 +37,36 @@
             // greetingLabel
             // 
             greetingLabel.AutoSize = true;
-            greetingLabel.Location = new Point(103, 47);
+            greetingLabel.Location = new Point(118, 63);
             greetingLabel.Name = "greetingLabel";
-            greetingLabel.Size = new Size(234, 15);
+            greetingLabel.Size = new Size(298, 20);
             greetingLabel.TabIndex = 1;
             greetingLabel.Text = "Добро пожаловать в Игру Гений и Идиот";
             // 
             // nameLabel
             // 
             nameLabel.AutoSize = true;
-            nameLabel.Location = new Point(154, 91);
+            nameLabel.Location = new Point(176, 121);
             nameLabel.Name = "nameLabel";
-            nameLabel.Size = new Size(111, 15);
+            nameLabel.Size = new Size(141, 20);
             nameLabel.TabIndex = 2;
             nameLabel.Text = "Введите Ваше имя:";
+            nameLabel.Click += nameLabel_Click;
             // 
             // userNameTextBox
             // 
-            userNameTextBox.Location = new Point(154, 132);
+            userNameTextBox.Location = new Point(176, 176);
+            userNameTextBox.Margin = new Padding(3, 4, 3, 4);
             userNameTextBox.Name = "userNameTextBox";
-            userNameTextBox.Size = new Size(111, 23);
+            userNameTextBox.Size = new Size(126, 27);
             userNameTextBox.TabIndex = 3;
             // 
             // acceptButton
             // 
-            acceptButton.Location = new Point(154, 183);
+            acceptButton.Location = new Point(176, 244);
+            acceptButton.Margin = new Padding(3, 4, 3, 4);
             acceptButton.Name = "acceptButton";
-            acceptButton.Size = new Size(111, 28);
+            acceptButton.Size = new Size(127, 37);
             acceptButton.TabIndex = 4;
             acceptButton.Text = "ПОДТВЕРДИТЬ";
             acceptButton.UseVisualStyleBackColor = true;
@@ -71,13 +74,14 @@
             // 
             // faceForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(451, 262);
+            ClientSize = new Size(515, 349);
             Controls.Add(acceptButton);
             Controls.Add(userNameTextBox);
             Controls.Add(nameLabel);
             Controls.Add(greetingLabel);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "faceForm";
             Text = "faceForm";
             ResumeLayout(false);
