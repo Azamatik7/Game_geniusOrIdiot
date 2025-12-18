@@ -31,7 +31,7 @@ namespace GeniusAndIdiotWinFormsApp
         private void Submitbutton_Click(object sender, EventArgs e)
         {
 
-            
+
 
             if (userAnswerTextBox.Text == correctAnswers[curentQuestionIndex])
             {
@@ -52,7 +52,7 @@ namespace GeniusAndIdiotWinFormsApp
             }
             curentQuestionIndex = rng.Next(bankOfQuestions.Count());
             questionLabel.Text = bankOfQuestions[curentQuestionIndex];
-            
+
             i++;
             questionNumberlabel.Text = $"Вопрос {i}";
 
@@ -67,7 +67,7 @@ namespace GeniusAndIdiotWinFormsApp
             questionLabel.Text = bankOfQuestions[curentQuestionIndex];
         }
 
-        static string Diagnosis(int cnt,int len)
+        static string Diagnosis(int cnt, int len)
         {
             string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
             double rightAns = cnt;
@@ -97,5 +97,7 @@ namespace GeniusAndIdiotWinFormsApp
 
 
         }
+
+        
     }
 }

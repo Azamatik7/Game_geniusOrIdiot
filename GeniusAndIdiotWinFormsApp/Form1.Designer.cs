@@ -46,7 +46,7 @@
             // 
             // userAnswerTextBox
             // 
-            userAnswerTextBox.Location = new Point(61, 141);
+            userAnswerTextBox.Location = new Point(61, 157);
             userAnswerTextBox.Name = "userAnswerTextBox";
             userAnswerTextBox.Size = new Size(177, 23);
             userAnswerTextBox.TabIndex = 1;
