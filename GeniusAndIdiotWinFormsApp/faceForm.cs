@@ -12,6 +12,7 @@ namespace GeniusAndIdiotWinFormsApp
 {
     public partial class faceForm : Form
     {
+        public static string userName;
         public faceForm()
         {
             InitializeComponent();
@@ -19,16 +20,21 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void acceptButton_Click(object sender, EventArgs e)
         {
-            
+            userName = userNameTextBox.Text;
             MessageBox.Show(userNameTextBox.Text + " проверим Гений ты или Идиот?", "", MessageBoxButtons.OK);
             Hide();
             ChoiceForm choiceForm = new ChoiceForm();
             choiceForm.Show();
-            
-            
+
+
         }
 
         private void nameLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void userNameTextBox_TextChanged(object sender, EventArgs e)
         {
 
         }

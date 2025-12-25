@@ -25,7 +25,6 @@ namespace GeniusAndIdiotWinFormsApp
             InitializeComponent();
             lenBank = bankOfQuestions.Count;
 
-
         }
 
         private void Submitbutton_Click(object sender, EventArgs e)
@@ -47,7 +46,21 @@ namespace GeniusAndIdiotWinFormsApp
                 questionLabel.Text = "Все!";
                 MessageBox.Show($"Количество правильных ответов: {rightAnswersCount}");
                 MessageBox.Show($"Ваш диагноз:{Diagnosis(rightAnswersCount, lenBank)}");
+                DialogResult decision =  MessageBox.Show($"Будем играть еще?", "", MessageBoxButtons.YesNo);
+                File.AppendAllText("records.txt", $"{faceForm.userName}#{Diagnosis(rightAnswersCount, lenBank)}#{rightAnswersCount}");
+                if ( decision == DialogResult.Yes )
+                {
+                    ChoiceForm choiceForm = new ChoiceForm();
+                    Hide();
+                    choiceForm.ShowDialog();
+
+                }
+                else
+                {
+                    Close();
+                }
                 Submitbutton.Enabled = false;
+
                 return;
             }
             curentQuestionIndex = rng.Next(bankOfQuestions.Count());

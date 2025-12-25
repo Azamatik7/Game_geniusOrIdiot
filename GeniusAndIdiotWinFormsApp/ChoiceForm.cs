@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace GeniusAndIdiotWinFormsApp
 {
+
     public partial class ChoiceForm : Form
     {
         public ChoiceForm()
@@ -27,6 +28,14 @@ namespace GeniusAndIdiotWinFormsApp
             Hide();
             Form1 form1 = new Form1();
             form1.Show();
+        }
+
+        private void recordsButton_Click(object sender, EventArgs e)
+        {
+            RecordsForm recordsForm = new RecordsForm();
+            Hide();
+            recordsForm.Show();
+            
         }
     }
 }

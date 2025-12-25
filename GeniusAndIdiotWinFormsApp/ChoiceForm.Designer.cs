@@ -62,6 +62,7 @@
             recordsButton.TabIndex = 2;
             recordsButton.Text = "РЕКОРДЫ";
             recordsButton.UseVisualStyleBackColor = true;
+            recordsButton.Click += recordsButton_Click;
             // 
             // addQuestionbutton
             // 
