@@ -20,7 +20,9 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            this.Close();
+            
+            
         }
 
         private void playButton_Click(object sender, EventArgs e)

@@ -15,7 +15,7 @@ namespace GeniusAndIdiotWinFormsApp
         public RecordsForm()
         {
             InitializeComponent();
-            
+
         }
 
         private void RecordsForm_Load(object sender, EventArgs e)
@@ -31,6 +31,18 @@ namespace GeniusAndIdiotWinFormsApp
                     dataGridView1.Rows.Add(data[0], data[1], data[2]);
                 }
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void backRecordsButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            ChoiceForm choiceForm = new ChoiceForm();
+            choiceForm.ShowDialog();
         }
     }
 }
