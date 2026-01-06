@@ -21,6 +21,8 @@ namespace GeniusAndIdiotWinFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+            AddQuestionForm addQuestionForm = new AddQuestionForm();
+            addQuestionForm.ShowDialog();
             
             
         }

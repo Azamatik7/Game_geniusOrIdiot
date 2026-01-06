@@ -4,26 +4,29 @@ namespace GeniusAndIdiotWinFormsApp
 {
     public partial class Form1 : Form
     {
-        private List<string> bankOfQuestions = new List<string>
-        {
-            "—колько океанов на планете «емл€?",
-            "ќдно €йцо варитс€ 3 минуты,сколько минут вар€тс€ три €йца?",
-            "—колько будет два плюс два умножить на два?",
-            "”кол делают каждые полчаса.—колько минут нужно,чтобы сделать три укола?",
-            "Ѕревно нужно распилить на 10 частей.—колько распилов нужно сделать?",
-            "м€у?"
-        };
+        //private List<string> bankOfQuestions = new List<string>
+        //{
+        //    "—колько океанов на планете «емл€?",
+        //    "ќдно €йцо варитс€ 3 минуты,сколько минут вар€тс€ три €йца?",
+        //    "—колько будет два плюс два умножить на два?",
+        //    "”кол делают каждые полчаса.—колько минут нужно,чтобы сделать три укола?",
+        //    "Ѕревно нужно распилить на 10 частей.—колько распилов нужно сделать?",
+        //    "м€у?"
+        //};
         int lenBank;
         int i = 1;
         int rightAnswersCount = 0;
+        //private Dictionary<string,string> questionAnswer = new Dictionary<string,string>();
+        
 
-        private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "м€у" };
+        //private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "м€у" };
         Random rng = new Random();
         int curentQuestionIndex;
         public Form1()
         {
             InitializeComponent();
             lenBank = bankOfQuestions.Count;
+            
 
         }
 
