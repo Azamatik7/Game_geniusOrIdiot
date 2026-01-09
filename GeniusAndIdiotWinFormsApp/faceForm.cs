@@ -16,19 +16,9 @@ namespace GeniusAndIdiotWinFormsApp
         public faceForm()
         {
             InitializeComponent();
-            if (File.Exists("questions.txt"))
-            {
-
-            }
-            else
-            {
-                for (int i = 0; i < bankOfQuestions.Count; i++)
-                {
-                    File.AppendAllText("questions.txt", bankOfQuestions[i] + "&" + correctAnswers[i] + Environment.NewLine);
-                }
-            }
-
             
+
+
         }
 
         private void acceptButton_Click(object sender, EventArgs e)
@@ -61,5 +51,21 @@ namespace GeniusAndIdiotWinFormsApp
             "мяу?"
         };
         private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "мяу" };
+
+        private void faceForm_Load(object sender, EventArgs e)
+        {
+            //File.WriteAllText("questions.txt", string.Empty);
+            string content = File.ReadAllText("questions.txt");
+            if (File.Exists("questions.txt") && content == "")
+            {
+
+                for (int i = 0; i < bankOfQuestions.Count; i++)
+                {
+                    File.AppendAllText("questions.txt", bankOfQuestions[i] + "&" + correctAnswers[i] + Environment.NewLine);
+                }
+
+            }
+            
+        }
     }
 }

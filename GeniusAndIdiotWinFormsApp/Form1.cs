@@ -4,28 +4,20 @@ namespace GeniusAndIdiotWinFormsApp
 {
     public partial class Form1 : Form
     {
-        //private List<string> bankOfQuestions = new List<string>
-        //{
-        //    "Сколько океанов на планете Земля?",
-        //    "Одно яйцо варится 3 минуты,сколько минут варятся три яйца?",
-        //    "Сколько будет два плюс два умножить на два?",
-        //    "Укол делают каждые полчаса.Сколько минут нужно,чтобы сделать три укола?",
-        //    "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
-        //    "мяу?"
-        //};
+        
         int lenBank;
         int i = 1;
         int rightAnswersCount = 0;
-        //private Dictionary<string,string> questionAnswer = new Dictionary<string,string>();
-        
+        List<string> questions = new List<string>();
+        List<string> answers = new List<string>();
 
-        //private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "мяу" };
+
+
         Random rng = new Random();
         int curentQuestionIndex;
         public Form1()
         {
             InitializeComponent();
-            lenBank = bankOfQuestions.Count;
             
 
         }
@@ -35,23 +27,23 @@ namespace GeniusAndIdiotWinFormsApp
 
 
 
-            if (userAnswerTextBox.Text == correctAnswers[curentQuestionIndex])
+            if (userAnswerTextBox.Text == answers[curentQuestionIndex])
             {
                 rightAnswersCount++;
             }
 
 
-            bankOfQuestions.RemoveAt(curentQuestionIndex);
-            correctAnswers.RemoveAt(curentQuestionIndex);
-            if (bankOfQuestions.Count == 0)
+            questions.RemoveAt(curentQuestionIndex);
+            answers.RemoveAt(curentQuestionIndex);
+            if (questions.Count == 0)
             {
                 userAnswerTextBox.Text = "";
                 questionLabel.Text = "Все!";
                 MessageBox.Show($"Количество правильных ответов: {rightAnswersCount}");
                 MessageBox.Show($"Ваш диагноз:{Diagnosis(rightAnswersCount, lenBank)}");
-                DialogResult decision =  MessageBox.Show($"Будем играть еще?", "", MessageBoxButtons.YesNo);
-                File.AppendAllText("records.txt", $"{faceForm.userName}#{Diagnosis(rightAnswersCount, lenBank)}#{rightAnswersCount}");
-                if ( decision == DialogResult.Yes )
+                DialogResult decision = MessageBox.Show($"Будем играть еще?", "", MessageBoxButtons.YesNo);
+                File.AppendAllText("records.txt", $"{faceForm.userName}#{Diagnosis(rightAnswersCount, lenBank)}#{rightAnswersCount}"+Environment.NewLine);
+                if (decision == DialogResult.Yes)
                 {
                     ChoiceForm choiceForm = new ChoiceForm();
                     Hide();
@@ -66,8 +58,8 @@ namespace GeniusAndIdiotWinFormsApp
 
                 return;
             }
-            curentQuestionIndex = rng.Next(bankOfQuestions.Count());
-            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+            curentQuestionIndex = rng.Next(questions.Count());
+            questionLabel.Text = questions[curentQuestionIndex];
 
             i++;
             questionNumberlabel.Text = $"Вопрос {i}";
@@ -77,10 +69,22 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (File.Exists("questions.txt"))
+            {
+                string[] lines = File.ReadAllLines("questions.txt");
+                foreach (string line in lines)
+                {
+                    string[] questionAns = line.Split("&");
+                    questions.Add(questionAns[0]);
+                    answers.Add(questionAns[1]);
+                }
+            }
+            lenBank = questions.Count;
+
             questionNumberlabel.Text = $"Вопрос {i}";
 
-            curentQuestionIndex = rng.Next(bankOfQuestions.Count);
-            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+            curentQuestionIndex = rng.Next(questions.Count);
+            questionLabel.Text = questions[curentQuestionIndex];
         }
 
         static string Diagnosis(int cnt, int len)
@@ -113,7 +117,7 @@ namespace GeniusAndIdiotWinFormsApp
 
 
         }
-
-        
     }
+
+
 }

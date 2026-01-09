@@ -20,6 +20,7 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void RecordsForm_Load(object sender, EventArgs e)
         {
+            //File.WriteAllText("records.txt", string.Empty);
             if (File.Exists("records.txt"))
             {
                 string[] lines = File.ReadAllLines("records.txt");
