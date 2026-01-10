@@ -55,16 +55,18 @@ namespace GeniusAndIdiotWinFormsApp
         private void faceForm_Load(object sender, EventArgs e)
         {
             //File.WriteAllText("questions.txt", string.Empty);
-            string content = File.ReadAllText("questions.txt");
-            if (File.Exists("questions.txt") && content == "")
-            {
+            
+            //string content = File.ReadAllText("questions.txt");
+            //if (File.Exists("questions.txt") && content == "")
+            //{
 
-                for (int i = 0; i < bankOfQuestions.Count; i++)
-                {
-                    File.AppendAllText("questions.txt", bankOfQuestions[i] + "&" + correctAnswers[i] + Environment.NewLine);
-                }
+            //    for (int i = 0; i < bankOfQuestions.Count; i++)
+            //    {
+            //        File.AppendAllText("questions.txt", bankOfQuestions[i] + "&" + correctAnswers[i] + Environment.NewLine);
+            //    }
 
-            }
+            //}
+            
             
         }
     }

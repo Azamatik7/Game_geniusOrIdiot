@@ -23,8 +23,8 @@ namespace GeniusAndIdiotWinFormsApp
             this.Close();
             AddQuestionForm addQuestionForm = new AddQuestionForm();
             addQuestionForm.ShowDialog();
-            
-            
+
+
         }
 
         private void playButton_Click(object sender, EventArgs e)
@@ -39,7 +39,28 @@ namespace GeniusAndIdiotWinFormsApp
             RecordsForm recordsForm = new RecordsForm();
             Hide();
             recordsForm.Show();
-            
+
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            Hide();
+            deleteForm deleteForm = new deleteForm();
+            deleteForm.Show();
+
+        }
+
+        private void deleteButton_Click_1(object sender, EventArgs e)
+        {
+            Hide();
+            deleteForm deleteForm = new deleteForm();
+            deleteForm.Show();
+
+        }
+
+        private void ChoiceForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -31,6 +31,7 @@ namespace GeniusAndIdiotWinFormsApp
 
                     dataGridView1.Rows.Add(data[0], data[1], data[2]);
                 }
+                
             }
         }
 
