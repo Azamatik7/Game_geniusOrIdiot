@@ -3,11 +3,32 @@ using System.Xml.Linq;
 
 using System.Linq;
 using System.Globalization;
+using static Game_geniusOrIdiot.Program;
 namespace Game_geniusOrIdiot
 {
 
     internal class Program
     {
+        public class User
+        {
+            public string Name { get; set; }
+            public string Diagnosis { get; set; }
+            public int CorrectAnswers = 0;
+            public User(string name)
+            {
+                Name = name;
+            }
+        }
+        public class Question
+        {
+            public string Text { get; set; }
+            public string RightAnswer { get; set; }
+            public Question(string text, string rightAnswer)
+            {
+                Text = text;
+                RightAnswer = rightAnswer;
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -150,44 +171,55 @@ namespace Game_geniusOrIdiot
 
 
 
-            Dictionary<string, string> queANs = GiveDictionary(bankOfQuestions, correctAnswers);
+            
 
 
             string nameOfUser = Greeting();
+            User user = new User(nameOfUser);
 
 
             while (true)
             {
                 Random rng = new Random();
-                // Перемешиваем вопросы прямо здесь
-                var shuffledQuestions = queANs
-                    .OrderBy(x => rng.Next())
-                    .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-                int cnt = 0;
-                List<string> mark = new List<string>();
+                List<Question> questions = new List<Question>();
 
-                foreach (string s in shuffledQuestions.Keys)
+                Question question1 = new Question("Сколько океанов на планете Земля?", "4");
+                questions.Add(question1);
+                Question question2 = new Question("Одно яйцо варится 3 минуты,сколько минут варятся три яйца?", "3");
+                questions.Add(question2);
+                Question question3 = new Question("Сколько будет два плюс два умножить на два?", "6");
+                questions.Add(question3);
+                Question question4 = new Question("Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?", "9");
+                questions.Add(question4);
+                Question question5 = new Question("Укол делают каждые полчаса.Сколько минут,сделать три укола?", "60");
+                questions.Add(question5);
+
+
+
+                
+                int lenQuest = questions.Count;
+                for (int i = 0;i < lenQuest;i++) 
                 {
-                    Console.WriteLine(s);
+                    
+                    int randoIndex = rng.Next(0,questions.Count);
+                    Console.WriteLine(questions[randoIndex].Text);
                     string answer = Console.ReadLine();
-                    if (answer == shuffledQuestions[s])
+                    if (answer == questions[randoIndex].RightAnswer)
                     {
-                        cnt++;
-                        mark.Add("+");
+                        user.CorrectAnswers++;
+                        
                     }
-                    else
-                    {
-                        mark.Add("-");
-                    }
+                    questions.RemoveAt(randoIndex);
+
                 }
 
-                Result(cnt, mark, correctAnswers);
-                string diagnos = Diagnosis(cnt, bankOfQuestions);
-                Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(cnt, bankOfQuestions)}");
+                
+                user.Diagnosis  = Diagnosis(user.CorrectAnswers, questions);
+                Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(user.CorrectAnswers, questions)}");
                 Console.WriteLine();
                 Console.WriteLine("Хотите сыграть заново?");
-                SaveRecord(diagnos, cnt, nameOfUser);
+                SaveRecord(user.Diagnosis, user.CorrectAnswers, user.Name);
                 string choice = Console.ReadLine();
                 if (choice.ToLower() == "да")
                 {
@@ -205,11 +237,11 @@ namespace Game_geniusOrIdiot
             Console.WriteLine("Игра завершена. Удачи в следующий раз");
 
 
-            static string Diagnosis(int cnt, string[] bank)
+            static string Diagnosis(int cnt, List<Question> bank)
             {
                 string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
                 double rightAns = cnt;
-                double questionsNumber = bank.Length;
+                double questionsNumber = bank.Count;
                 double percent = rightAns / questionsNumber * 100;
                 if (percent == 0)
                 {
@@ -235,15 +267,7 @@ namespace Game_geniusOrIdiot
 
 
             }
-            static void Result(int cnt, List<string> mark, string[] correctAnswers)
-            {
-                Console.WriteLine($"Ваше количество правильных ответов : {cnt}");
-                Console.WriteLine("Результаты:");
-                for (int i = 0; i < mark.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}){mark[i]}");
-                }
-            }
+             
 
             static string Greeting()
             {
@@ -254,15 +278,7 @@ namespace Game_geniusOrIdiot
                 return name;
             }
 
-            static Dictionary<string, string> GiveDictionary(string[] bankOfQuestions, string[] correctAnswers)
-            {
-                Dictionary<string, string> queAns = new Dictionary<string, string>();
-                for (int i = 0; i < bankOfQuestions.Length; i++)
-                {
-                    queAns[bankOfQuestions[i]] = correctAnswers[i];
-                }
-                return queAns;
-            }
+            
             static string WhichAction()
             {
                 string[] actions = { "Играть", "Добавить вопрос", "Удалить вопрос", "Рекорды" };
