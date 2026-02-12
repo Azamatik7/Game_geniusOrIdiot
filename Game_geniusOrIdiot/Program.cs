@@ -42,25 +42,29 @@ namespace Game_geniusOrIdiot
                 "Сколько будет два плюс два умножить на два?",
                 "Укол делают каждые полчаса.Сколько минут,сделать три укола?",
                 "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
-                "мяу?"
+                
                 };
-            string[] correctAnswers = { "4", "3", "6", "60", "9", "мяу" };
+            string[] correctAnswers = { "4", "3", "6", "60", "9",};
 
 
             if (File.Exists(questionsFile))
             {
+                List<Question> questions = new List<Question>();
                 string[] lines = File.ReadAllLines(questionsFile);
-                List<string> questionsList = new List<string>();
-                List<string> answersList = new List<string>();
-
-                for (int i = 0; i < lines.Length; i += 2)
+                foreach (string line in lines)
                 {
-                    questionsList.Add(lines[i]);
-                    answersList.Add(lines[i + 1]);
+                    Question question = new Question(line.Split("#")[0], line.Split("#")[1]);
+                }    
 
+
+            }
+            else
+            {
+                
+                for (int i = 0; i < bankOfQuestions.Length; i++)
+                {
+                    File.AppendAllText(questionsFile, bankOfQuestions[i] + "#" + correctAnswers[i]+Environment.NewLine);
                 }
-                bankOfQuestions = questionsList.ToArray();
-                correctAnswers = answersList.ToArray();
             }
 
 
@@ -78,48 +82,29 @@ namespace Game_geniusOrIdiot
                 Console.WriteLine("Введите ответ к нему:");
                 string newAnswer = Console.ReadLine();
 
-
-                List<string> newQuestions = new List<string>(bankOfQuestions);
-                List<string> newAnswers = new List<string>(correctAnswers);
-
-                newQuestions.Add(newQuestion);
-                newAnswers.Add(newAnswer);
-
-                bankOfQuestions = newQuestions.ToArray();
-                correctAnswers = newAnswers.ToArray();
-
-
-                SaveToFile(questionsFile, bankOfQuestions, correctAnswers);
+                File.AppendAllText(questionsFile, newQuestion +"#"+ newAnswer+Environment.NewLine);
+                
 
                 Console.WriteLine("Вопрос добавлен!");
             }
             else if (action == "3")
             {
-                Console.WriteLine("Напишите вопрос, который хотите удалить:");
-                string delQues = Console.ReadLine();
-
-
-                for (int i = 0; i < bankOfQuestions.Length; i++)
+                
+                string[] lines = File.ReadAllLines (questionsFile);
+                for (int i = 0;i < lines.Length;i++)
                 {
-                    if (bankOfQuestions[i] == delQues)
-                    {
+                    Console.WriteLine($"{i + 1}) {lines[i].Split("#")[0]}");
 
-                        List<string> newQuestions = new List<string>(bankOfQuestions);
-                        List<string> newAnswers = new List<string>(correctAnswers);
-
-                        newQuestions.RemoveAt(i);
-                        newAnswers.RemoveAt(i);
-
-                        bankOfQuestions = newQuestions.ToArray();
-                        correctAnswers = newAnswers.ToArray();
-
-
-                        SaveToFile(questionsFile, bankOfQuestions, correctAnswers);
-
-                        Console.WriteLine("Вопрос удален!");
-                        break;
-                    }
                 }
+                Console.WriteLine();
+                Console.WriteLine("Выберите номер вопроса, который хотите удалить");
+                int deleteIndex = int.Parse(Console.ReadLine())-1;// от номера вопроса отнимаем один т.к нам нужен индекс
+                
+                var withoutDeleted = File.ReadAllLines(questionsFile).ToList();
+                withoutDeleted.RemoveAt(deleteIndex);
+                File.WriteAllLines(questionsFile, withoutDeleted);
+                Console.WriteLine("Вопрос удален!");
+                
             }
             else if (action == "4")
             {
@@ -184,20 +169,15 @@ namespace Game_geniusOrIdiot
 
                 List<Question> questions = new List<Question>();
 
-                Question question1 = new Question("Сколько океанов на планете Земля?", "4");
-                questions.Add(question1);
-                Question question2 = new Question("Одно яйцо варится 3 минуты,сколько минут варятся три яйца?", "3");
-                questions.Add(question2);
-                Question question3 = new Question("Сколько будет два плюс два умножить на два?", "6");
-                questions.Add(question3);
-                Question question4 = new Question("Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?", "9");
-                questions.Add(question4);
-                Question question5 = new Question("Укол делают каждые полчаса.Сколько минут,сделать три укола?", "60");
-                questions.Add(question5);
+
+                string[] lines = File.ReadAllLines(questionsFile);
+                foreach (string line in lines)
+                {
+                    Question question = new Question(line.Split("#")[0], line.Split("#")[1]);
+                    questions.Add(question);
+                }
 
 
-
-                
                 int lenQuest = questions.Count;
                 for (int i = 0;i < lenQuest;i++) 
                 {
@@ -210,19 +190,24 @@ namespace Game_geniusOrIdiot
                         user.CorrectAnswers++;
                         
                     }
+
                     questions.RemoveAt(randoIndex);
 
                 }
+                
+
 
                 
-                user.Diagnosis  = Diagnosis(user.CorrectAnswers, questions);
-                Console.WriteLine($"Ваш диагноз:{nameOfUser}-{Diagnosis(user.CorrectAnswers, questions)}");
+                user.Diagnosis = Diagnosis(user.CorrectAnswers, lenQuest);
+                Console.WriteLine($"Ваш диагноз:{user.Name}-{user.Diagnosis}");
                 Console.WriteLine();
                 Console.WriteLine("Хотите сыграть заново?");
                 SaveRecord(user.Diagnosis, user.CorrectAnswers, user.Name);
                 string choice = Console.ReadLine();
                 if (choice.ToLower() == "да")
                 {
+                    user.CorrectAnswers = 0;
+                    user.Diagnosis = "";
                     continue;
                 }
                 else
@@ -237,11 +222,11 @@ namespace Game_geniusOrIdiot
             Console.WriteLine("Игра завершена. Удачи в следующий раз");
 
 
-            static string Diagnosis(int cnt, List<Question> bank)
+            static string Diagnosis(int cnt, int len)
             {
                 string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
                 double rightAns = cnt;
-                double questionsNumber = bank.Count;
+                double questionsNumber = len;
                 double percent = rightAns / questionsNumber * 100;
                 if (percent == 0)
                 {
@@ -291,19 +276,7 @@ namespace Game_geniusOrIdiot
                 return choice;
 
             }
-            static void SaveToFile(string filename, string[] questions, string[] answers)
-            {
-                List<string> lines = new List<string>();
-
-                for (int i = 0; i < questions.Length; i++)
-                {
-                    lines.Add(questions[i]);
-                    lines.Add(answers[i]);
-                }
-
-                File.WriteAllLines(filename, lines);
-                Console.WriteLine("Вопросы сохранены!");
-            }
+            
             static void SaveRecord(string diagnos, int cnt, string nameOfUser)
             {
                 string recordsFile = "records.txt";
