@@ -7,8 +7,8 @@ namespace Game_geniusOrIdiot
     {
         public class User
         {
-            public string Name { get; set; }
-            public string Diagnosis { get; set; }
+            public string Name;
+            public string Diagnosis;
             public int CorrectAnswers = 0;
             public User(string name)
             {
@@ -18,8 +18,8 @@ namespace Game_geniusOrIdiot
 
         public class Question
         {
-            public string Text { get; set; }
-            public string RightAnswer { get; set; }
+            public string Text;
+            public string RightAnswer;
             public Question(string text, string rightAnswer)
             {
                 Text = text;
@@ -66,26 +66,26 @@ namespace Game_geniusOrIdiot
 
                 }
             }
-            public void FillFile(string path)
-            {
-                string[] bankOfQuestions =
-                {
-                            "Сколько океанов на планете Земля?",
-                            "Одно яйцо варится 3 минуты,сколько минут варятся три яйца?",
-                            "Сколько будет два плюс два умножить на два?",
-                            "Укол делают каждые полчаса.Сколько минут,сделать три укола?",
-                            "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
+            //public void FillFile(string path)
+            //{
+            //    string[] bankOfQuestions =
+            //    {
+            //                "Сколько океанов на планете Земля?",
+            //                "Одно яйцо варится 3 минуты,сколько минут варятся три яйца?",
+            //                "Сколько будет два плюс два умножить на два?",
+            //                "Укол делают каждые полчаса.Сколько минут,сделать три укола?",
+            //                "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
 
-                        };
-                string[] correctAnswers = { "4", "3", "6", "60", "9", };
+            //            };
+            //    string[] correctAnswers = { "4", "3", "6", "60", "9", };
 
-                for (int i = 0; i < bankOfQuestions.Length; i++)
-                {
-                    File.AppendAllText(path, bankOfQuestions[i] + "#" + correctAnswers[i] + Environment.NewLine);
-                }
+            //    for (int i = 0; i < bankOfQuestions.Length; i++)
+            //    {
+            //        File.AppendAllText(path, bankOfQuestions[i] + "#" + correctAnswers[i] + Environment.NewLine);
+            //    }
 
 
-            }
+            //}
             public void Add(Question question)
             {
                 File.AppendAllText(path, question.Text + "#" + question.RightAnswer + Environment.NewLine);
@@ -105,13 +105,13 @@ namespace Game_geniusOrIdiot
 
 
 
-                if (!File.Exists(questionsFile))
-                {
-                    for (int i = 0; i < bankOfQuestions.Length; i++)
-                    {
-                        File.AppendAllText(questionsFile, bankOfQuestions[i] + "#" + correctAnswers[i] + Environment.NewLine);
-                    }
-                }
+                //if (!File.Exists(questionsFile))
+                //{
+                //    for (int i = 0; i < bankOfQuestions.Length; i++)
+                //    {
+                //        File.AppendAllText(questionsFile, bankOfQuestions[i] + "#" + correctAnswers[i] + Environment.NewLine);
+                //    }
+                //}
 
                 string action = WhichAction();
                 if (action == "2")
@@ -121,7 +121,7 @@ namespace Game_geniusOrIdiot
 
                     Console.WriteLine("Введите ответ к нему:");
                     string newAnswer = Console.ReadLine();
-                    
+
                     QuestionsStorage questionsStorage = new QuestionsStorage();
                     questionsStorage.Add(new Question(newQuestion, newAnswer));
 
@@ -139,11 +139,11 @@ namespace Game_geniusOrIdiot
                     Console.WriteLine();
                     Console.WriteLine("Выберите номер вопроса, который хотите удалить");
                     int deleteIndex = int.Parse(Console.ReadLine()) - 1;// от номера вопроса отнимаем один т.к нам нужен индекс
-                    
+
                     QuestionsStorage questionsStorage = new QuestionsStorage();
                     questionsStorage.Remove(deleteIndex);
 
-                    
+
 
                     Console.WriteLine("Вопрос удален!");
                 }
@@ -214,7 +214,8 @@ namespace Game_geniusOrIdiot
                     string[] lines = File.ReadAllLines(questionsFile);
                     foreach (string line in lines)
                     {
-                        Question question = new Question(line.Split("#")[0], line.Split("#")[1]);
+                        string[] both = line.Split("#");
+                        Question question = new Question(both[0], both[1]);
                         questions.Add(question);
                     }
 
@@ -328,15 +329,11 @@ namespace Game_geniusOrIdiot
                         File.WriteAllText(recordsFile, formatRecord + Environment.NewLine);
                     }
                 }
-                //static string WriteMe(string diagnos, int cnt, string nameOfUser)
-                //{
-                //    string formatRecord = $"     {nameOfUser,-32}{diagnos,-30}{cnt,-25}";
-                //    return formatRecord;
 
-                //}
 
             }
         }
     }
+}
 
 
