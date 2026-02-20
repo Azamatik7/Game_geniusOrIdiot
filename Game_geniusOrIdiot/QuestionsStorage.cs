@@ -3,46 +3,35 @@
     public class QuestionsStorage
     {
         private string path = "question.txt";
+
         public List<Question> GetAll()
         {
+            if (!File.Exists(path))
+            {
+                throw new Exception("Ошибка брат");
+            }
+
             string[] check = File.ReadAllLines(path);
-            if (File.Exists(path) && check.Length != 0) // доделать 
+            if (check.Length != 0)
             {
                 List<Question> list = new List<Question>();
 
                 foreach (string line in check)
                 {
-                    Question question = new Question(line.Split("#")[0], line.Split("#")[1]);
+                    string[] lineData = line.Split("#");
+                    Question question = new Question(lineData[0], lineData[1]);
                     list.Add(question);
                 }
                 return list;
             }
-            else if (File.Exists(path) && check.Length == 0)
+
+            List<Question> defaultQuestions = GetDefaultQuestions();
+            foreach (Question defaultQuestion in defaultQuestions)
             {
-
-                FillFile();
-
-                string[] lines = File.ReadAllLines(path);
-
-
-
-                List<Question> questions = new List<Question>();
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    string[] QuestionAnswer = lines[i].Split("#");
-                    Question question = new Question(QuestionAnswer[0], QuestionAnswer[1]);
-                    questions.Add(question);
-                }
-                return questions;
-
-
-
-            }
-            else
-            {
-                throw new Exception("Ошибка брат");
+                Add(defaultQuestion);
             }
             
+            return defaultQuestions;
         }
 
         public void Add(Question question)
@@ -57,34 +46,24 @@
             File.WriteAllLines(path, withoutDeleted);
         }
 
-        public void SaveRecord(string nameOfUser, string diagnos, int cnt)
+        public List<Question> GetDefaultQuestions()
         {
-            string formatRecord = $"{nameOfUser}#{diagnos}#{cnt}";
-            if (File.Exists(path))
-            {
-                File.AppendAllText(path, formatRecord + Environment.NewLine);
-            }
-            else
-            {
-                File.WriteAllText(path, formatRecord + Environment.NewLine);
-            }
-        }
-        public void FillFile()
-        {
-            string[] bankOfQuestions =
-                    {
-                            "Сколько океанов на планете Земля?",
-                            "Одно яйцо варится 3 минуты,сколько минут варятся три яйца?",
-                            "Сколько будет два плюс два умножить на два?",
-                            "Укол делают каждые полчаса.Сколько минут,сделать три укола?",
-                            "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
+            List<Question> defaultQuestions = new List<Question>();
 
-                        };
-            string[] correctAnswers = { "4", "3", "6", "60", "9"};
-            for (int i = 0; i < bankOfQuestions.Length; i++)
-            {
-                File.AppendAllText(path, bankOfQuestions[i] + "#" + correctAnswers[i] + Environment.NewLine);
-            }
+            Question default1 = new Question("Сколько океанов на планете Земля?", "4");
+            Question default2 = new Question("Одно яйцо варится 3 минуты,сколько минут варятся три яйца?", "3");
+            Question default3 = new Question("Сколько будет два плюс два умножить на два?","6");
+            Question default4 = new Question("Укол делают каждые полчаса.Сколько минут,сделать три укола?", "60");
+            Question default5 = new Question("Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?", "9");
+
+            defaultQuestions.Add(default1);
+            defaultQuestions.Add(default2);
+            defaultQuestions.Add(default3);
+            defaultQuestions.Add(default4);
+            defaultQuestions.Add(default5);
+
+            return defaultQuestions;
+
         }
     }
 }
