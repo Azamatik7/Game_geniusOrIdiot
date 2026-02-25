@@ -8,6 +8,12 @@ namespace Game_geniusOrIdiot
         static void Main(string[] args)
         {
             string action = WhichAction();
+            while (!FoolCheckAction(action))
+            {
+                Console.WriteLine("Вы ввели неправильную команду");
+                Console.WriteLine("Попробуйте еще раз");
+                action = Console.ReadLine();
+            }
             if (action == "2")
             {
                 AddNewQuestion();
@@ -18,16 +24,23 @@ namespace Game_geniusOrIdiot
                 QuestionsStorage questionsStorage = new QuestionsStorage();
                 List<Question> allQuestions = questionsStorage.GetAll();
 
-                for (int i = 0; i < allQuestions.Count; i++)
+                for (int i = 0; i < allQuestions.Count; i++)// Вывод всех вопросов
                 {
                     Console.WriteLine($"{i + 1}) {allQuestions[i].Text}");
                 }
 
                 Console.WriteLine();
                 Console.WriteLine("Выберите номер вопроса, который хотите удалить");
-                string deleteIndex = (int.Parse(Console.ReadLine()) - 1).ToString();// от номера вопроса отнимаем один т.к нам нужен индекс
+                string deleteNumber = Console.ReadLine();
 
-                questionsStorage.Remove(int.Parse(deleteIndex));
+                while (!FoolCheckIndex(deleteNumber,allQuestions.Count)) // проверка корректности номера/индекса
+                {
+                    Console.WriteLine("Вы ввели неверный номер");
+                    Console.WriteLine("Повторите действие");
+                    deleteNumber = Console.ReadLine();
+                }
+                
+                questionsStorage.Remove(int.Parse(deleteNumber)-1);// удаление
                 Console.WriteLine("Вопрос удален!");
             }
             else if (action == "4")
@@ -42,24 +55,23 @@ namespace Game_geniusOrIdiot
                     Console.WriteLine();
                     Console.WriteLine(" Имя пользователя                 Диагноз              кол-во правильных ответов");
 
-                    List<List<string>> strings = new List<List<string>>();
+                    List<List<string>> UsersData = new List<List<string>>();// данные пользователя 
 
 
                     UserStorage usersRecords = new UserStorage();
                     List<User> userData = usersRecords.GetAll();
 
-                    foreach(User userResult in userData)
+                    foreach(User userResult in userData)// заполнение данных  одного пользователя в список
                     {
                         List<string> currentUserdata = new List<string>();
                         currentUserdata.Add(userResult.Name);
                         currentUserdata.Add(userResult.Diagnosis);
                         currentUserdata.Add(userResult.CorrectAnswers.ToString());
-                        strings.Add(currentUserdata);
+                        UsersData.Add(currentUserdata);
                     }
-
                     
                     List<List<string>> sortedUsersData = new List<List<string>>();
-                    sortedUsersData = strings.OrderByDescending(x => int.Parse(x[2])).ToList();
+                    sortedUsersData = UsersData.OrderByDescending(x => int.Parse(x[2])).ToList(); // сортировка пользователей по праваильным ответам
 
                     if (sortedUsersData.Count < 10)
                     {
@@ -86,69 +98,73 @@ namespace Game_geniusOrIdiot
 
 
 
-
-            string nameOfUser = Greeting();
-            User user = new User(nameOfUser);
-
-
-            while (true)
+            if (action == "1")
             {
-                Random rng = new Random();
 
-                List<Question> questions = new List<Question>();
 
-                QuestionsStorage questionsBank = new QuestionsStorage();
-                List<Question> lines = questionsBank.GetAll();
-                foreach (Question line in lines)
+                string nameOfUser = Greeting();
+                User user = new User(nameOfUser);
+
+
+                while (true)
                 {
-                    
-                    Question question = new Question(line.Text,line.RightAnswer);
-                    questions.Add(question);
-                }
+                    Random rng = new Random();
 
+                    List<Question> questions = new List<Question>();
 
-                int lenQuest = questions.Count;
-                for (int i = 0; i < lenQuest; i++)
-                {
-
-                    int randoIndex = rng.Next(0, questions.Count);
-                    Console.WriteLine(questions[randoIndex].Text);
-
-                    string answer = Console.ReadLine();
-                    if (answer == questions[randoIndex].RightAnswer)
+                    QuestionsStorage questionsBank = new QuestionsStorage();
+                    List<Question> lines = questionsBank.GetAll();
+                    foreach (Question line in lines)
                     {
-                        user.CorrectAnswers++;
+
+                        Question question = new Question(line.Text, line.RightAnswer);
+                        questions.Add(question);
                     }
 
-                    questions.RemoveAt(randoIndex);
+
+                    int lenQuest = questions.Count;
+                    for (int i = 0; i < lenQuest; i++)
+                    {
+
+                        int randoIndex = rng.Next(0, questions.Count);
+                        Console.WriteLine(questions[randoIndex].Text);
+
+                        string answer = Console.ReadLine();
+                        if (answer == questions[randoIndex].RightAnswer)
+                        {
+                            user.CorrectAnswers++;
+                        }
+
+                        questions.RemoveAt(randoIndex);
+                    }
+
+                    user.Diagnosis = SayDiagnosis(user.CorrectAnswers, lenQuest);
+
+                    Console.WriteLine($"Ваш диагноз:{user.Name}-{user.Diagnosis}");
+                    Console.WriteLine();
+                    Console.WriteLine("Хотите сыграть заново?");
+
+                    UserStorage saveUserRecord = new UserStorage();
+                    saveUserRecord.SaveRecord(user);
+
+                    string restart = Console.ReadLine();
+                    if (restart.ToLower() == "да")
+                    {
+                        user.CorrectAnswers = 0;
+                        user.Diagnosis = "";
+                        continue;
+                    }
+                    else
+                    {
+
+                        break;
+                    }
+
                 }
 
-                user.Diagnosis = SayDiagnosis(user.CorrectAnswers, lenQuest);
-
-                Console.WriteLine($"Ваш диагноз:{user.Name}-{user.Diagnosis}");
                 Console.WriteLine();
-                Console.WriteLine("Хотите сыграть заново?");
-
-                UserStorage saveUserRecord = new UserStorage();
-                saveUserRecord.SaveRecord(user);
-
-                string restart = Console.ReadLine();
-                if (restart.ToLower() == "да")
-                {
-                    user.CorrectAnswers = 0;
-                    user.Diagnosis = "";
-                    continue;
-                }
-                else
-                {
-
-                    break;
-                }
-
+                Console.WriteLine("Игра завершена. Удачи в следующий раз");
             }
-
-            Console.WriteLine();
-            Console.WriteLine("Игра завершена. Удачи в следующий раз");
 
 
             static string SayDiagnosis(int cnt, int len)
@@ -218,9 +234,27 @@ namespace Game_geniusOrIdiot
 
             Console.WriteLine("Вопрос добавлен!");
         }
-        public static bool FoolCheck(string checkIndex,int questionsQuantity) // доделать проверку на дурака
+        public static bool FoolCheckIndex(string checkIndex, int questionsQuantity) 
         {
-            if(int.TryParse(checkIndex,))
+            if (int.TryParse(checkIndex, out int correctInt))
+            {
+                if (correctInt > 0 && correctInt <= questionsQuantity)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static bool FoolCheckAction(string action)
+        {
+            if (int.TryParse(action, out int correctAction))
+            {
+                if (correctAction >= 1 && correctAction <= 4)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }
