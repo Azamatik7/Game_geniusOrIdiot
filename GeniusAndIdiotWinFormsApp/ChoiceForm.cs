@@ -10,23 +10,26 @@ using System.Windows.Forms;
 
 namespace GeniusAndIdiotWinFormsApp
 {
-
+    
     public partial class ChoiceForm : Form
     {
+        User user;
         public ChoiceForm()
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        public ChoiceForm(User User)
         {
-
+            InitializeComponent();
+            user = User;
         }
+
+
 
         private void playButton_Click(object sender, EventArgs e)
         {
             Hide();
-            Form1 form1 = new Form1();
+            Form1 form1 = new Form1(user);
             form1.Show();
         }
 
@@ -35,7 +38,12 @@ namespace GeniusAndIdiotWinFormsApp
             RecordsForm recordsForm = new RecordsForm();
             Hide();
             recordsForm.Show();
-            
+
+        }
+
+        private void addQuestionbutton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

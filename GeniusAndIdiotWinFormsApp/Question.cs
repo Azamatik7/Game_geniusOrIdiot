@@ -1,0 +1,14 @@
+namespace GeniusAndIdiotWinFormsApp
+{
+    public class Question
+    {
+        public string Text;
+        public string RightAnswer;
+
+        public Question(string text, string rightAnswer)
+        {
+            Text = text;
+            RightAnswer = rightAnswer;
+        }
+    }
+}

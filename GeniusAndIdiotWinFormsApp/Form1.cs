@@ -2,52 +2,60 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace GeniusAndIdiotWinFormsApp
 {
-    public partial class Form1 : Form
+public partial class Form1 : Form
     {
-        private List<string> bankOfQuestions = new List<string>
-        {
-            "Сколько океанов на планете Земля?",
-            "Одно яйцо варится 3 минуты,сколько минут варятся три яйца?",
-            "Сколько будет два плюс два умножить на два?",
-            "Укол делают каждые полчаса.Сколько минут нужно,чтобы сделать три укола?",
-            "Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?",
-            "мяу?"
-        };
+        
         int lenBank;
         int i = 1;
-        int rightAnswersCount = 0;
+        User user;
 
-        private List<string> correctAnswers = new List<string> { "4", "3", "6", "60", "9", "мяу" };
+        
         Random rng = new Random();
         int curentQuestionIndex;
+
+        QuestionsStorage questionsStorage = new QuestionsStorage();
+        List<Question> questions = new List<Question>();
+        
+        UserStorage userStorage = new UserStorage();
+        
         public Form1()
         {
-            InitializeComponent();
-            lenBank = bankOfQuestions.Count;
+            InitializeComponent();            
+            
 
         }
+        public Form1(User fromChoice)
+        {
+            InitializeComponent();
+            user = fromChoice;
+        }
+        
 
         private void Submitbutton_Click(object sender, EventArgs e)
         {
 
 
 
-            if (userAnswerTextBox.Text == correctAnswers[curentQuestionIndex])
+            if (userAnswerTextBox.Text == questions[curentQuestionIndex].RightAnswer)
             {
-                rightAnswersCount++;
+                user.CorrectAnswers++;
             }
 
 
-            bankOfQuestions.RemoveAt(curentQuestionIndex);
-            correctAnswers.RemoveAt(curentQuestionIndex);
-            if (bankOfQuestions.Count == 0)
+            
+            questions.RemoveAt(curentQuestionIndex);
+
+            if (questions.Count == 0)
             {
                 userAnswerTextBox.Text = "";
                 questionLabel.Text = "Все!";
-                MessageBox.Show($"Количество правильных ответов: {rightAnswersCount}");
-                MessageBox.Show($"Ваш диагноз:{Diagnosis(rightAnswersCount, lenBank)}");
+                MessageBox.Show($"Количество правильных ответов: {user.CorrectAnswers}");
+                MessageBox.Show($"Ваш диагноз:{SayDiagnosis(user.CorrectAnswers, lenBank)}");
                 DialogResult decision =  MessageBox.Show($"Будем играть еще?", "", MessageBoxButtons.YesNo);
-                File.AppendAllText("records.txt", $"{faceForm.userName}#{Diagnosis(rightAnswersCount, lenBank)}#{rightAnswersCount}");
+                
+                user.Diagnosis = SayDiagnosis(user.CorrectAnswers, lenBank);
+                
+                userStorage.SaveRecord(user);
                 if ( decision == DialogResult.Yes )
                 {
                     ChoiceForm choiceForm = new ChoiceForm();
@@ -63,8 +71,8 @@ namespace GeniusAndIdiotWinFormsApp
 
                 return;
             }
-            curentQuestionIndex = rng.Next(bankOfQuestions.Count());
-            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+            curentQuestionIndex = rng.Next(questions.Count);
+            questionLabel.Text = questions[curentQuestionIndex].Text;
 
             i++;
             questionNumberlabel.Text = $"Вопрос {i}";
@@ -76,41 +84,23 @@ namespace GeniusAndIdiotWinFormsApp
         {
             questionNumberlabel.Text = $"Вопрос {i}";
 
-            curentQuestionIndex = rng.Next(bankOfQuestions.Count);
-            questionLabel.Text = bankOfQuestions[curentQuestionIndex];
+            curentQuestionIndex = rng.Next(questions.Count);
+            questions = questionsStorage.GetAll();
+            questionLabel.Text = questions[curentQuestionIndex].Text;
+            
+            lenBank = questions.Count;
         }
 
-        static string Diagnosis(int cnt, int len)
+        static string SayDiagnosis(int cnt, int len)
         {
             string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
             double rightAns = cnt;
             double questionsNumber = len;
             double percent = rightAns / questionsNumber * 100;
-            if (percent == 0)
-            {
-                return diagnosises[0];
-            }
-            if (percent < 20)
-            {
-                return diagnosises[1];
-            }
-            if (percent < 40)
-            {
-                return diagnosises[2];
-            }
-            if (percent < 60)
-            {
-                return diagnosises[3];
-            }
-            if (percent < 80)
-            {
-                return diagnosises[4];
-            }
-            return diagnosises[5];
 
-
+            return diagnosises[int.Parse((percent / 20d).ToString())];
         }
 
-        
+
     }
 }

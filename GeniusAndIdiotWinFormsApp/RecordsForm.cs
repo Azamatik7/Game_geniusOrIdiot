@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace GeniusAndIdiotWinFormsApp
 {
+    
     public partial class RecordsForm : Form
     {
         public RecordsForm()
@@ -20,17 +21,13 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void RecordsForm_Load(object sender, EventArgs e)
         {
-            if (File.Exists("records.txt"))
+            UserStorage userStorage = new UserStorage();
+            List<User> users = userStorage.GetAll();
+            foreach (User user in users)
             {
-                string[] lines = File.ReadAllLines("records.txt");
-                foreach (string line in lines)
-                {
-
-                    string[] data = line.Split("#");
-
-                    dataGridView1.Rows.Add(data[0], data[1], data[2]);
-                }
+                dataGridView1.Rows.Add(user.Name, user.Diagnosis, user.CorrectAnswers);
             }
+            
         }
     }
 }
