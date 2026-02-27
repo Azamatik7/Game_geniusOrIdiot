@@ -72,6 +72,8 @@ public partial class Form1 : Form
                 return;
             }
             curentQuestionIndex = rng.Next(questions.Count);
+            
+            
             questionLabel.Text = questions[curentQuestionIndex].Text;
 
             i++;

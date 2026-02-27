@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace GeniusAndIdiotWinFormsApp
 {
-    
+
     public partial class ChoiceForm : Form
     {
         User user;
@@ -43,7 +43,16 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void addQuestionbutton_Click(object sender, EventArgs e)
         {
+            Hide();
+            AddForm addForm = new AddForm();
+            addForm.Show();
+        }
 
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            Hide();
+            DeleteButtonForm deleteButton = new DeleteButtonForm();
+            deleteButton.Show();
         }
     }
 }

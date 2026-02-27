@@ -13,7 +13,7 @@ namespace GeniusAndIdiotWinFormsApp
             }
 
             string[] check = File.ReadAllLines(path);
-            if (check.Length != 0)
+            if (check.Length != 0 && check[0] != "")
             {
                 List<Question> list = new List<Question>();
 

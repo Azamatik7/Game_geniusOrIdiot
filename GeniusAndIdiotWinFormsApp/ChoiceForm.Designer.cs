@@ -38,18 +38,17 @@
             // choiceActionLabel
             // 
             choiceActionLabel.AutoSize = true;
-            choiceActionLabel.Location = new Point(113, 61);
+            choiceActionLabel.Location = new Point(99, 46);
             choiceActionLabel.Name = "choiceActionLabel";
-            choiceActionLabel.Size = new Size(160, 20);
+            choiceActionLabel.Size = new Size(126, 15);
             choiceActionLabel.TabIndex = 0;
             choiceActionLabel.Text = "ВЫБЕРИТЕ ДЕЙСТВИЕ";
             // 
             // playButton
             // 
-            playButton.Location = new Point(131, 115);
-            playButton.Margin = new Padding(3, 4, 3, 4);
+            playButton.Location = new Point(115, 86);
             playButton.Name = "playButton";
-            playButton.Size = new Size(96, 43);
+            playButton.Size = new Size(84, 32);
             playButton.TabIndex = 1;
             playButton.Text = "ИГРАТЬ";
             playButton.UseVisualStyleBackColor = true;
@@ -57,10 +56,9 @@
             // 
             // recordsButton
             // 
-            recordsButton.Location = new Point(131, 180);
-            recordsButton.Margin = new Padding(3, 4, 3, 4);
+            recordsButton.Location = new Point(115, 135);
             recordsButton.Name = "recordsButton";
-            recordsButton.Size = new Size(96, 43);
+            recordsButton.Size = new Size(84, 32);
             recordsButton.TabIndex = 2;
             recordsButton.Text = "РЕКОРДЫ";
             recordsButton.UseVisualStyleBackColor = true;
@@ -68,10 +66,9 @@
             // 
             // addQuestionbutton
             // 
-            addQuestionbutton.Location = new Point(131, 248);
-            addQuestionbutton.Margin = new Padding(3, 4, 3, 4);
+            addQuestionbutton.Location = new Point(115, 186);
             addQuestionbutton.Name = "addQuestionbutton";
-            addQuestionbutton.Size = new Size(96, 43);
+            addQuestionbutton.Size = new Size(84, 32);
             addQuestionbutton.TabIndex = 3;
             addQuestionbutton.Text = "ДОБАВИТЬ";
             addQuestionbutton.UseVisualStyleBackColor = true;
@@ -79,25 +76,24 @@
             // 
             // deleteButton
             // 
-            deleteButton.Location = new Point(131, 312);
-            deleteButton.Margin = new Padding(3, 4, 3, 4);
+            deleteButton.Location = new Point(115, 234);
             deleteButton.Name = "deleteButton";
-            deleteButton.Size = new Size(96, 43);
+            deleteButton.Size = new Size(84, 32);
             deleteButton.TabIndex = 4;
             deleteButton.Text = "УБРАТЬ";
             deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += deleteButton_Click;
             // 
             // ChoiceForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(381, 383);
+            ClientSize = new Size(333, 287);
             Controls.Add(deleteButton);
             Controls.Add(addQuestionbutton);
             Controls.Add(recordsButton);
             Controls.Add(playButton);
             Controls.Add(choiceActionLabel);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "ChoiceForm";
             Text = "ChoiceForm";
             ResumeLayout(false);
