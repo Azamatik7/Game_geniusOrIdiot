@@ -10,13 +10,13 @@ using System.Windows.Forms;
 
 namespace GeniusAndIdiotWinFormsApp
 {
-    
+
     public partial class RecordsForm : Form
     {
         public RecordsForm()
         {
             InitializeComponent();
-            
+
         }
 
         private void RecordsForm_Load(object sender, EventArgs e)
@@ -27,7 +27,20 @@ namespace GeniusAndIdiotWinFormsApp
             {
                 dataGridView1.Rows.Add(user.Name, user.Diagnosis, user.CorrectAnswers);
             }
-            
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            Hide();
+            ChoiceForm choiceForm = new ChoiceForm();
+            choiceForm.ShowDialog();
+
         }
     }
 }

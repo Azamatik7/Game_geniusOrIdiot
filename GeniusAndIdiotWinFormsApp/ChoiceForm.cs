@@ -51,7 +51,7 @@ namespace GeniusAndIdiotWinFormsApp
         private void deleteButton_Click(object sender, EventArgs e)
         {
             Hide();
-            DeleteButtonForm deleteButton = new DeleteButtonForm();
+            DeleteForm deleteButton = new DeleteForm();
             deleteButton.Show();
         }
     }

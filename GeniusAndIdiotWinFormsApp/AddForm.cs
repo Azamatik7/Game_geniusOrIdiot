@@ -29,12 +29,19 @@ namespace GeniusAndIdiotWinFormsApp
             QuestionsStorage questionsStorage = new QuestionsStorage();
             newText = newQuestionTextBox.Text;
             newAnswer = newAnswerTextBox.Text;
-            Question question = new Question(newText,newAnswer);
+            Question question = new Question(newText, newAnswer);
             questionsStorage.Add(question);
             MessageBox.Show("Вопрос добавлен!");
             Hide();
             ChoiceForm choiceForm = new ChoiceForm();
             choiceForm.ShowDialog();
+        }
+
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            Hide();
+            ChoiceForm choiceForm2 = new ChoiceForm();
+            choiceForm2.ShowDialog();
         }
     }
 }
