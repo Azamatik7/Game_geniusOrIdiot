@@ -28,6 +28,8 @@ public partial class Form1 : Form
         {
             InitializeComponent();
             user = fromChoice;
+            // Если зайти в ИГРАТЬ не первым действием прога ложится!
+            // Если перезапустить игру игра ложится!
         }
         
 

@@ -38,24 +38,26 @@
             // 
             questionNumberlabel.AutoSize = true;
             questionNumberlabel.Font = new Font("Bookman Old Style", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            questionNumberlabel.Location = new Point(115, 19);
+            questionNumberlabel.Location = new Point(131, 25);
             questionNumberlabel.Name = "questionNumberlabel";
-            questionNumberlabel.Size = new Size(82, 20);
+            questionNumberlabel.Size = new Size(100, 23);
             questionNumberlabel.TabIndex = 0;
             questionNumberlabel.Text = "Вопрос 1";
             // 
             // userAnswerTextBox
             // 
-            userAnswerTextBox.Location = new Point(61, 157);
+            userAnswerTextBox.Location = new Point(70, 222);
+            userAnswerTextBox.Margin = new Padding(3, 4, 3, 4);
             userAnswerTextBox.Name = "userAnswerTextBox";
-            userAnswerTextBox.Size = new Size(177, 23);
+            userAnswerTextBox.Size = new Size(202, 27);
             userAnswerTextBox.TabIndex = 1;
             // 
             // Submitbutton
             // 
-            Submitbutton.Location = new Point(90, 206);
+            Submitbutton.Location = new Point(94, 305);
+            Submitbutton.Margin = new Padding(3, 4, 3, 4);
             Submitbutton.Name = "Submitbutton";
-            Submitbutton.Size = new Size(120, 47);
+            Submitbutton.Size = new Size(137, 63);
             Submitbutton.TabIndex = 2;
             Submitbutton.Text = "ОТВЕТИТЬ";
             Submitbutton.UseVisualStyleBackColor = true;
@@ -66,22 +68,23 @@
             questionLabel.AutoEllipsis = true;
             questionLabel.AutoSize = true;
             questionLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            questionLabel.Location = new Point(61, 59);
-            questionLabel.MaximumSize = new Size(200, 0);
+            questionLabel.Location = new Point(70, 79);
+            questionLabel.MaximumSize = new Size(229, 0);
             questionLabel.Name = "questionLabel";
-            questionLabel.Size = new Size(70, 21);
+            questionLabel.Size = new Size(88, 28);
             questionLabel.TabIndex = 3;
             questionLabel.Text = "question";
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 348);
+            ClientSize = new Size(370, 458);
             Controls.Add(questionLabel);
             Controls.Add(Submitbutton);
             Controls.Add(userAnswerTextBox);
             Controls.Add(questionNumberlabel);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;

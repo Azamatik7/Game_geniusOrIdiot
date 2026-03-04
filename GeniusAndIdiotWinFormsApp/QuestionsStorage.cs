@@ -1,50 +1,72 @@
+using Newtonsoft.Json;
 namespace GeniusAndIdiotWinFormsApp
 {
     public class QuestionsStorage
     {
-        private string path = "questions.txt";
+        private string path = "question.json";
+
 
         public List<Question> GetAll()
         {
             if (!File.Exists(path))
             {
-                GetDefaultQuestions();
-                //throw new Exception("Ошибка брат");
+                
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
 
-            string[] check = File.ReadAllLines(path);
-            if (check.Length != 0 && check[0] != "")
+            string jsonContent = File.ReadAllText(path);
+
+            
+            if (string.IsNullOrWhiteSpace(jsonContent))
             {
-                List<Question> list = new List<Question>();
-
-                foreach (string line in check)
-                {
-                    string[] lineData = line.Split("#");
-                    Question question = new Question(lineData[0], lineData[1]);
-                    list.Add(question);
-                }
-                return list;
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
 
-            List<Question> defaultQuestions = GetDefaultQuestions();
-            foreach (Question defaultQuestion in defaultQuestions)
+            
+            List<Question> questions = JsonConvert.DeserializeObject<List<Question>>(jsonContent) ?? new List<Question>();
+
+            
+            if (questions.Count == 0)
             {
-                Add(defaultQuestion);
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
 
-            return defaultQuestions;
+            return questions;
         }
 
         public void Add(Question question)
         {
-            File.AppendAllText(path, question.Text + "#" + question.RightAnswer + Environment.NewLine);
+            var questions = new List<Question>();
+
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                questions = JsonConvert.DeserializeObject<List<Question>>(json) ?? new List<Question>();
+            }
+
+            questions.Add(question);
+
+            string updatedJson = JsonConvert.SerializeObject(questions);
+            File.WriteAllText(path, updatedJson);
         }
 
         public void Remove(int index)
         {
-            var withoutDeleted = File.ReadAllLines(path).ToList();
-            withoutDeleted.RemoveAt(index);
-            File.WriteAllLines(path, withoutDeleted);
+            string json = File.ReadAllText(path);
+            var questions = JsonConvert.DeserializeObject<List<Question>>(json) ?? new List<Question>();
+            questions.RemoveAt(index);
+
+            string updatedJson = JsonConvert.SerializeObject(questions);
+            File.WriteAllText(path, updatedJson);
         }
 
         public List<Question> GetDefaultQuestions()

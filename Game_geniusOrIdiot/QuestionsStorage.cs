@@ -1,49 +1,74 @@
-﻿namespace Game_geniusOrIdiot
+﻿using System.IO;
+using Newtonsoft.Json;
+
+namespace Game_geniusOrIdiot
 {
     public class QuestionsStorage
     {
-        private string path = "question.txt";
+        private string path = "question.json";
 
+        
         public List<Question> GetAll()
         {
             if (!File.Exists(path))
             {
-                throw new Exception("Ошибка брат");
+                // Если файла нет - создаем с дефолтными вопросами
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
 
-            string[] check = File.ReadAllLines(path);
-            if (check.Length != 0)
+            string jsonContent = File.ReadAllText(path);
+
+            // Если файл пустой или содержит только пробелы
+            if (string.IsNullOrWhiteSpace(jsonContent))
             {
-                List<Question> list = new List<Question>();
-
-                foreach (string line in check)
-                {
-                    string[] lineData = line.Split("#");
-                    Question question = new Question(lineData[0], lineData[1]);
-                    list.Add(question);
-                }
-                return list;
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
 
-            List<Question> defaultQuestions = GetDefaultQuestions();
-            foreach (Question defaultQuestion in defaultQuestions)
+            // Десериализуем JSON в список вопросов
+            List<Question> questions = JsonConvert.DeserializeObject<List<Question>>(jsonContent) ?? new List<Question>();
+
+            // Если список пустой после десериализации
+            if (questions.Count == 0)
             {
-                Add(defaultQuestion);
+                List<Question> defaultQuestions = GetDefaultQuestions();
+                string json = JsonConvert.SerializeObject(defaultQuestions);
+                File.WriteAllText(path, json);
+                return defaultQuestions;
             }
-            
-            return defaultQuestions;
+
+            return questions;
         }
 
         public void Add(Question question)
         {
-            File.AppendAllText(path, question.Text + "#" + question.RightAnswer + Environment.NewLine);
+            var questions = new List<Question>();
+
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                questions = JsonConvert.DeserializeObject<List<Question>>(json) ?? new List<Question>();
+            }
+
+            questions.Add(question);
+
+            string updatedJson = JsonConvert.SerializeObject(questions); 
+            File.WriteAllText(path, updatedJson);
         }
 
         public void Remove(int index)
         {
-            var withoutDeleted = File.ReadAllLines(path).ToList();
-            withoutDeleted.RemoveAt(index);
-            File.WriteAllLines(path, withoutDeleted);
+            string json = File.ReadAllText(path);
+            var questions = JsonConvert.DeserializeObject<List<Question>>(json) ?? new List<Question>();  
+            questions.RemoveAt(index);
+
+            string updatedJson = JsonConvert.SerializeObject(questions);  
+            File.WriteAllText(path, updatedJson);
         }
 
         public List<Question> GetDefaultQuestions()
@@ -52,7 +77,7 @@
 
             Question default1 = new Question("Сколько океанов на планете Земля?", "4");
             Question default2 = new Question("Одно яйцо варится 3 минуты,сколько минут варятся три яйца?", "3");
-            Question default3 = new Question("Сколько будет два плюс два умножить на два?","6");
+            Question default3 = new Question("Сколько будет два плюс два умножить на два?", "6");
             Question default4 = new Question("Укол делают каждые полчаса.Сколько минут,сделать три укола?", "60");
             Question default5 = new Question("Бревно нужно распилить на 10 частей.Сколько распилов нужно сделать?", "9");
 
