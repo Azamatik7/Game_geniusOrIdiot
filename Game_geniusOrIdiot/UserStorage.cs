@@ -1,27 +1,44 @@
-﻿namespace Game_geniusOrIdiot
+﻿using Newtonsoft.Json;
+using System.IO;
+
+namespace Game_geniusOrIdiot
 {
     public class UserStorage
     {
-        private string path = "records.txt";
+        private string path = "records.json";
+
 
         public void SaveRecord(User user)
         {
-            string formatRecord = $"{user.Name}#{user.Diagnosis}#{user.CorrectAnswers}";
-            File.AppendAllText(path, formatRecord + Environment.NewLine);
+            // Читаем существующих пользователей
+            List<User> users = GetAll();
+
+            // Добавляем нового пользователя
+            users.Add(user);
+
+            // Сериализуем список в JSON с форматированием
+            string jsonString = JsonConvert.SerializeObject(users, Formatting.Indented);
+
+            // Записываем в файл
+            File.WriteAllText(path, jsonString);
         }
 
         public List<User> GetAll()
         {
-            string[] records = File.ReadAllLines(path);
-            List<User> users = new List<User>();
-
-            foreach (string record in records)
+            // Проверяем, существует ли файл
+            if (!File.Exists(path))
             {
-                string[] userdata = record.Split("#");
-                User user = new User(userdata[0], userdata[1], int.Parse(userdata[2]));
-                users.Add(user);
+                return new List<User>();
             }
-            return users;
+
+            // Читаем JSON из файла
+            string jsonString = File.ReadAllText(path);
+
+            // Десериализуем JSON в список пользователей
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(jsonString);
+
+            // Возвращаем результат (если null, то возвращаем пустой список)
+            return users ?? new List<User>();
         }
     }
 }

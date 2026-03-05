@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_geniusOrIdiot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +13,6 @@ namespace GeniusAndIdiotWinFormsApp
 {
     public partial class AddForm : Form
     {
-        public string newText;
-        public string newAnswer;
         public AddForm()
         {
             InitializeComponent();
@@ -27,21 +26,16 @@ namespace GeniusAndIdiotWinFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             QuestionsStorage questionsStorage = new QuestionsStorage();
-            newText = newQuestionTextBox.Text;
-            newAnswer = newAnswerTextBox.Text;
-            Question question = new Question(newText, newAnswer);
+            
+            Question question = new Question(newQuestionTextBox.Text, newAnswerTextBox.Text);
             questionsStorage.Add(question);
             MessageBox.Show("Вопрос добавлен!");
-            Hide();
-            ChoiceForm choiceForm = new ChoiceForm();
-            choiceForm.ShowDialog();
+            Close();
         }
 
         private void BackButton_Click(object sender, EventArgs e)
         {
-            Hide();
-            ChoiceForm choiceForm2 = new ChoiceForm();
-            choiceForm2.ShowDialog();
+            Close();
         }
     }
 }

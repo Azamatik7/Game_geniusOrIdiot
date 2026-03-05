@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_geniusOrIdiot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -30,14 +31,17 @@ namespace GeniusAndIdiotWinFormsApp
         {
             Hide();
             Form1 form1 = new Form1(user);
-            form1.Show();
+            form1.ShowDialog();
+            Show();
         }
 
         private void recordsButton_Click(object sender, EventArgs e)
         {
-            RecordsForm recordsForm = new RecordsForm();
+            
             Hide();
-            recordsForm.Show();
+            RecordsForm recordsForm = new RecordsForm();
+            recordsForm.ShowDialog();
+            Show();
 
         }
 
@@ -45,14 +49,16 @@ namespace GeniusAndIdiotWinFormsApp
         {
             Hide();
             AddForm addForm = new AddForm();
-            addForm.Show();
+            addForm.ShowDialog();
+            Show();
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
             Hide();
             DeleteForm deleteButton = new DeleteForm();
-            deleteButton.Show();
+            deleteButton.ShowDialog();
+            Show();
         }
     }
 }

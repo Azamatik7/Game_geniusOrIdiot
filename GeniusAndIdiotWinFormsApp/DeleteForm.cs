@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_geniusOrIdiot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,9 +20,7 @@ namespace GeniusAndIdiotWinFormsApp
 
         private void BackButton_Click(object sender, EventArgs e)
         {
-            Hide();
-            ChoiceForm choiceForm = new ChoiceForm();
-            choiceForm.ShowDialog();
+            Close();
         }
 
         private void DeleteForm_Load(object sender, EventArgs e)

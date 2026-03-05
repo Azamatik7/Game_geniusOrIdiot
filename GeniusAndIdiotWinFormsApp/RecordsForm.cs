@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game_geniusOrIdiot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,18 +17,17 @@ namespace GeniusAndIdiotWinFormsApp
         public RecordsForm()
         {
             InitializeComponent();
-
-        }
+        }        
 
         private void RecordsForm_Load(object sender, EventArgs e)
         {
             UserStorage userStorage = new UserStorage();
             List<User> users = userStorage.GetAll();
+
             foreach (User user in users)
             {
                 dataGridView1.Rows.Add(user.Name, user.Diagnosis, user.CorrectAnswers);
             }
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -40,7 +40,6 @@ namespace GeniusAndIdiotWinFormsApp
             Hide();
             ChoiceForm choiceForm = new ChoiceForm();
             choiceForm.ShowDialog();
-
         }
     }
 }

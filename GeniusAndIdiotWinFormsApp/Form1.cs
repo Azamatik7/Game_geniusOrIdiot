@@ -1,3 +1,4 @@
+using Game_geniusOrIdiot;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace GeniusAndIdiotWinFormsApp
@@ -17,21 +18,16 @@ public partial class Form1 : Form
         List<Question> questions = new List<Question>();
         
         UserStorage userStorage = new UserStorage();
-        
+
         public Form1()
         {
-            InitializeComponent();            
-            
-
-        }
+            InitializeComponent();
+        }   
         public Form1(User fromChoice)
         {
             InitializeComponent();
             user = fromChoice;
-            // Если зайти в ИГРАТЬ не первым действием прога ложится!
-            // Если перезапустить игру игра ложится!
         }
-        
 
         private void Submitbutton_Click(object sender, EventArgs e)
         {
@@ -60,16 +56,13 @@ public partial class Form1 : Form
                 userStorage.SaveRecord(user);
                 if ( decision == DialogResult.Yes )
                 {
-                    ChoiceForm choiceForm = new ChoiceForm();
-                    Hide();
-                    choiceForm.ShowDialog();
-
+                    StartGame();
                 }
                 else
                 {
                     Close();
                 }
-                Submitbutton.Enabled = false;
+                
 
                 return;
             }
@@ -86,13 +79,22 @@ public partial class Form1 : Form
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            StartGame();
+        }
+
+        private void StartGame()
+        {
+            user.CorrectAnswers = 0;
+            user.Diagnosis = "";
+            i = 1;
+
             questionNumberlabel.Text = $"Вопрос {i}";
 
-            curentQuestionIndex = rng.Next(questions.Count);
             questions = questionsStorage.GetAll();
-            questionLabel.Text = questions[curentQuestionIndex].Text;
-            
             lenBank = questions.Count;
+
+            curentQuestionIndex = rng.Next(questions.Count);
+            questionLabel.Text = questions[curentQuestionIndex].Text;
         }
 
         static string SayDiagnosis(int cnt, int len)
@@ -102,9 +104,7 @@ public partial class Form1 : Form
             double questionsNumber = len;
             double percent = rightAns / questionsNumber * 100;
 
-            return diagnosises[int.Parse((percent / 20d).ToString())];
+            return diagnosises[(int)(percent / 20d)];
         }
-
-
     }
 }

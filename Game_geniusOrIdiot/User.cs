@@ -16,6 +16,10 @@
             Diagnosis = diagnosis;
             CorrectAnswers = correctAnswers;
         }
+        public User()
+        {
+
+        }
     }
 }
 
