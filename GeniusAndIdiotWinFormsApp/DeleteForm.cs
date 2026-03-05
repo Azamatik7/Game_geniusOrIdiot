@@ -1,5 +1,6 @@
 ﻿using Game_geniusOrIdiot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -37,10 +38,31 @@ namespace GeniusAndIdiotWinFormsApp
         private void DeleteButton_Click(object sender, EventArgs e)
         {
             string deleteNumber = NumberDeleteTextBox.Text;
+            
+
             QuestionsStorage questionsStorage = new QuestionsStorage();
+            if (!FoolCheckNumber(deleteNumber, questionsStorage.GetAll().Count))
+            {
+                NumberDeleteTextBox.Text = "";
+                MessageBox.Show("Введите корректный номер!");
+                NumberDeleteTextBox.Focus();
+                return;
+
+            }
             questionsStorage.Remove(int.Parse(deleteNumber)-1);
             MessageBox.Show("Вопрос удален!");
 
+        }
+        public static bool FoolCheckNumber(string checkNumber, int questionsQuantity)
+        {
+            if (int.TryParse(checkNumber, out int correctNumber))
+            {
+                if (correctNumber > 0 && correctNumber <= questionsQuantity)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Game_geniusOrIdiot
 {
     public class UserStorage
     {
-        private string path = "records.json";
+        private string path = "@\"..\\..\\..\\records.json";
 
 
         public void SaveRecord(User user)

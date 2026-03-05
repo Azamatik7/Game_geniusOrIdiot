@@ -1,0 +1,27 @@
+[
+  {
+    "Name": "уу",
+    "Diagnosis": "Человек Разумный",
+    "CorrectAnswers": 4
+  },
+  {
+    "Name": "5",
+    "Diagnosis": "Идиот",
+    "CorrectAnswers": 1
+  },
+  {
+    "Name": "5",
+    "Diagnosis": "Идиот",
+    "CorrectAnswers": 1
+  },
+  {
+    "Name": "5",
+    "Diagnosis": "Идиот",
+    "CorrectAnswers": 1
+  },
+  {
+    "Name": "проба 1",
+    "Diagnosis": "Талант",
+    "CorrectAnswers": 5
+  }
+]

@@ -5,7 +5,7 @@ namespace Game_geniusOrIdiot
 {
     public class QuestionsStorage
     {
-        private string path = "question.json";
+        private string path = @"..\..\..\question.json";
 
         
         public List<Question> GetAll()
