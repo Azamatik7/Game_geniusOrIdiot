@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game_geniusOrIdiot", "Game_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeniusAndIdiotWinFormsApp", "GeniusAndIdiotWinFormsApp\GeniusAndIdiotWinFormsApp.csproj", "{2CA35988-9EE9-479C-BD6E-B56ECC44FEB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBot_Genius&Idiot", "TgBot_Genius&Idiot\TgBot_Genius&Idiot.csproj", "{70A447CB-1A92-4A98-9DD8-0BC4B267942C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2CA35988-9EE9-479C-BD6E-B56ECC44FEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA35988-9EE9-479C-BD6E-B56ECC44FEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA35988-9EE9-479C-BD6E-B56ECC44FEB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70A447CB-1A92-4A98-9DD8-0BC4B267942C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70A447CB-1A92-4A98-9DD8-0BC4B267942C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70A447CB-1A92-4A98-9DD8-0BC4B267942C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70A447CB-1A92-4A98-9DD8-0BC4B267942C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
