@@ -57,12 +57,12 @@ namespace TgBot_Genius_Idiot
                 if (update.Message.Text == questions[randomInd].RightAnswer)
                 {
                     correctAnswersCount++;
-                    await bot.SendMessage(chatId, "Базару нет");
+                    await bot.SendMessage(chatId, "+");
                     questions.RemoveAt(randomInd);
                 }
                 else
                 {
-                    await bot.SendMessage(chatId, "ну неправильно бр");
+                    await bot.SendMessage(chatId, "-");
                     questions.RemoveAt(randomInd);
                 }
 
