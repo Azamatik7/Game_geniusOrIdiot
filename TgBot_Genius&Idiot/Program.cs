@@ -1,5 +1,6 @@
 ﻿using Game_geniusOrIdiot;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TgBot_Genius_Idiot
 {
@@ -9,7 +10,7 @@ namespace TgBot_Genius_Idiot
 
         private static List<Question> questions;
         static int randomInd;
-        static int chatId = 1025006977;
+        static int chatId ;
         static int correctAnswersCount;
         static int questionCount;
         static async Task Main(string[] args)
@@ -30,10 +31,35 @@ namespace TgBot_Genius_Idiot
         private static async Task Bot_OnUpdate(Telegram.Bot.Types.Update update)
         {
 
+
             if (update.Message == null)
                 return;
 
             if (update.Message.Text == "/start")
+            {
+
+                await bot.SendMessage((update.Message.Id), "Выберете действие: ",
+                    replyMarkup: new KeyboardButton[][] { ["Начать игру", "Показать результаты"] });
+                
+
+                //if ((int)update.Message.Chat.Id == chatId)
+                //{
+                //    randomInd = new Random().Next(0, questions.Count);
+
+                //    await bot.SendMessage(update.Message.Chat.Id, questions[randomInd].Text);
+
+                //}
+                //else
+                //{
+                //    randomInd = new Random().Next(0, questions.Count);
+
+                //    await bot.SendMessage(update.Message.Chat.Id, questions[randomInd].Text);
+
+
+                //    chatId = (int)update.Message.Chat.Id;
+                //}
+            }
+            if (update.Message.Text == "Начать игру")
             {
                 if ((int)update.Message.Chat.Id == chatId)
                 {
@@ -51,9 +77,7 @@ namespace TgBot_Genius_Idiot
 
                     chatId = (int)update.Message.Chat.Id;
                 }
-            }
-            else
-            {                
+
                 if (update.Message.Text == questions[randomInd].RightAnswer)
                 {
                     correctAnswersCount++;
@@ -67,19 +91,19 @@ namespace TgBot_Genius_Idiot
                 }
 
                 randomInd = new Random().Next(0, questions.Count);
+
                 if (questions.Count == 0)
                 {
 
                     
+
                     await bot.SendMessage(chatId, $"Игра завершена! Ваш диагноз - {SayDiagnosis(correctAnswersCount, questionCount)}");
                     correctAnswersCount = 0;
                     return;
                 }
                 await bot.SendMessage(update.Message.Chat.Id, questions[randomInd].Text);
-
-                
-                
             }
+
             static string SayDiagnosis(int cnt, int len)
             {
                 string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
