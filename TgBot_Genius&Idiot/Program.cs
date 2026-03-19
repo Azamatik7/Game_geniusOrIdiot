@@ -1,23 +1,24 @@
 ﻿using Game_geniusOrIdiot;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using static TgBot_Genius_Idiot.Program;
 
 namespace TgBot_Genius_Idiot
 {
-    internal class Program
+    internal partial class Program
     {
         static TelegramBotClient bot = new TelegramBotClient("8709825825:AAF5GH_GzfchJZKaSlngaC4b-PVNe-He8U0");
 
         private static List<Question> questions;
         static int randomInd;
-        static long chatId;
-        static int correctAnswersCount;
         static int questionCount;
-        static bool isWaitingForAnswer = false;
-        static Question currentQuestion;
-        static UserStorage users;
-        static Game_geniusOrIdiot.User currentUser;
+        static UserStorage users = new UserStorage();
+
+        // Хранилище данных для каждого пользователя
+        private static Dictionary<long, UserGameData> _userGames = new Dictionary<long, UserGameData>();
+        private static Dictionary<long, UserState> _userStates = new Dictionary<long, UserState>();
 
         static async Task Main(string[] args)
         {
@@ -38,89 +39,141 @@ namespace TgBot_Genius_Idiot
             if (update.Message == null)
                 return;
 
-            chatId = update.Message.Chat.Id;
+            long chatId = update.Message.Chat.Id;
+            long userId = update.Message.From.Id;
+            string messageText = update.Message.Text;
 
-            if (update.Message.Text == "/start")
+            // Получаем или создаем состояние пользователя
+            if (!_userStates.ContainsKey(userId))
             {
-                await bot.SendMessage(chatId, "Выберете действие: ",
-                    replyMarkup: new ReplyKeyboardMarkup(new[] { new KeyboardButton[] { "Начать игру","Показать результаты","Добавить вопрос"} }) { ResizeKeyboard = true });
+                _userStates[userId] = new UserState(userId);
+            }
+            var userState = _userStates[userId];
+
+            // Получаем или создаем игровые данные пользователя
+            if (!_userGames.ContainsKey(userId))
+            {
+                _userGames[userId] = new UserGameData();
+            }
+            var userGame = _userGames[userId];
+
+            // Обработка команды /start
+            if (messageText == "/start")
+            {
+                Page page = new StartPage();
+                await page.View(bot, update.Message, userState);
+                userState.CurrentPage = "StartPage";
+
+                // Сбрасываем игровые данные при новом старте
+                _userGames[userId] = new UserGameData();
                 return;
             }
 
-            if (update.Message.Text == "Начать игру")
+            // Обработка результатов
+            if (messageText == "📊 Показать результаты")
             {
-                // Сброс игры
-                correctAnswersCount = 0;
-                questions = new QuestionsStorage().GetAll();
-                questionCount = questions.Count;
-
-                
-                randomInd = new Random().Next(0, questions.Count);
-                currentQuestion = questions[randomInd];
-                await bot.SendMessage(chatId, $"Вопрос 1 из {questionCount}:\n{currentQuestion.Text}");
-                isWaitingForAnswer = true;
+                ResultsPage resultsPage = new ResultsPage();
+                await resultsPage.View(bot, update.Message, userState);
                 return;
             }
 
-            
-            if (isWaitingForAnswer && currentQuestion != null)
+            // Обработка ответов во время игры
+            if (userGame.IsWaitingForAnswer && userGame.CurrentQuestion != null)
             {
-                if (update.Message.Text == currentQuestion.RightAnswer)
+                if (messageText == userGame.CurrentQuestion.RightAnswer)
                 {
-                    correctAnswersCount++;
+                    userGame.CorrectAnswersCount++;
                     await bot.SendMessage(chatId, "✅ +");
                 }
                 else
                 {
-                    await bot.SendMessage(chatId, $"❌ - (Правильный ответ: {currentQuestion.RightAnswer})");
+                    await bot.SendMessage(chatId, $"❌ - (Правильный ответ: {userGame.CurrentQuestion.RightAnswer})");
                 }
 
-                // Удаляем отвеченный вопрос
-                questions.Remove(currentQuestion);
+                // Удаляем отвеченный вопрос из общего списка
+                questions.Remove(userGame.CurrentQuestion);
 
-                // Проверяем, остались ли вопросы
+                // Проверяем, кончились ли вопросы
                 if (questions.Count == 0)
                 {
-                    currentUser.Name = update.Message.From.Username;
-                    currentUser.CorrectAnswers = correctAnswersCount;
-                    currentUser.Diagnosis = SayDiagnosis(correctAnswersCount, questionCount);
-                    
-                    await bot.SendMessage(chatId, $"Игра завершена! Правильных ответов: {correctAnswersCount} из {questionCount}\nВаш диагноз - {SayDiagnosis(correctAnswersCount, questionCount)}");                    isWaitingForAnswer = false;
-                    
+                    // Сохраняем результат
+                    var currentUser = new Game_geniusOrIdiot.User
+                    {
+                        Name = update.Message.From.Username ?? update.Message.From.FirstName,
+                        CorrectAnswers = userGame.CorrectAnswersCount,
+                        Diagnosis = SayDiagnosis(userGame.CorrectAnswersCount, questionCount)
+                    };
+
+                    await bot.SendMessage(chatId,
+                        $"Игра завершена! Правильных ответов: {userGame.CorrectAnswersCount} из {questionCount}\n" +
+                        $"Ваш диагноз - {currentUser.Diagnosis}");
+
                     users.SaveRecord(currentUser);
 
-                    currentUser = null;
-                    currentQuestion = null;
+                    // Сбрасываем данные пользователя
+                    _userGames[userId] = new UserGameData();
                 }
                 else
                 {
-                    // Следующий вопрос
+                    // Отправляем следующий вопрос
                     randomInd = new Random().Next(0, questions.Count);
-                    currentQuestion = questions[randomInd];
-                    await bot.SendMessage(chatId, $"Вопрос {questionCount - questions.Count + 1} из {questionCount}:\n{currentQuestion.Text}");
+                    userGame.CurrentQuestion = questions[randomInd];
+                    await bot.SendMessage(chatId,
+                        $"Вопрос {questionCount - questions.Count + 1} из {questionCount}:\n" +
+                        $"{userGame.CurrentQuestion.Text}");
                 }
             }
-            if (update.Message.Text == "Показать результаты")
-            {
-                var allUsers = users.GetAll();
-
-                //Москва тоже не сразу строилась
-            }
-
-            if (update.Message.Text == "Добавить вопрос")
-            {
-
-            }    
-                
         }
+
         static string SayDiagnosis(int cnt, int len)
         {
             string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
-            double rightAns = cnt;
-            double questionsNumber = len;
-            double percent = rightAns / questionsNumber * 100;
+            double percent = (double)cnt / len * 100;
+            int index = (int)(percent / 20);
+            
+            if (index >= diagnosises.Length) index = diagnosises.Length - 1;
+            return diagnosises[index];
+        }
 
-            return diagnosises[(int)(percent / 20d)];
+        public static string GetSortedUsers(List<Game_geniusOrIdiot.User> userData)
+        {
+            var sortedUsersData = userData.OrderByDescending(x => x.CorrectAnswers).ToList();
+
+            string message = $"<pre>{"Name",-25}{"Diagnosis",-20}{"CorrectAnswers",-10}\n";
+
+            foreach (var user in sortedUsersData)
+            {
+                message += $"{user.Name,-27}{user.Diagnosis,-20}{user.CorrectAnswers,-20}\n";
+            }
+            message += "</pre>";
+
+            return message;
+        }
+    }
+
+    // Класс для хранения игровых данных пользователя
+    public class UserGameData
+    {
+        public int CorrectAnswersCount { get; set; }
+        public bool IsWaitingForAnswer { get; set; }
+        public Question CurrentQuestion { get; set; }
+
+        public UserGameData()
+        {
+            CorrectAnswersCount = 0;
+            IsWaitingForAnswer = false;
+            CurrentQuestion = null;
+        }
+    }
+
+    public class UserState
+    {
+        public long UserId { get; set; }
+        public string CurrentPage { get; set; }
+
+        public UserState(long userId)
+        {
+            UserId = userId;
         }
     }
 }
