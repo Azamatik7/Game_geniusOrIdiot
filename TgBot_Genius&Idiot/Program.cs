@@ -3,7 +3,6 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using static TgBot_Genius_Idiot.Program;
 
 namespace TgBot_Genius_Idiot
 {
@@ -16,7 +15,7 @@ namespace TgBot_Genius_Idiot
         static int questionCount;
         static UserStorage users = new UserStorage();
 
-        // Хранилище данных для каждого пользователя
+        
         private static Dictionary<long, UserGameData> _userGames = new Dictionary<long, UserGameData>();
         private static Dictionary<long, UserState> _userStates = new Dictionary<long, UserState>();
 
@@ -43,33 +42,32 @@ namespace TgBot_Genius_Idiot
             long userId = update.Message.From.Id;
             string messageText = update.Message.Text;
 
-            // Получаем или создаем состояние пользователя
+            
             if (!_userStates.ContainsKey(userId))
             {
                 _userStates[userId] = new UserState(userId);
             }
             var userState = _userStates[userId];
 
-            // Получаем или создаем игровые данные пользователя
+            
             if (!_userGames.ContainsKey(userId))
             {
                 _userGames[userId] = new UserGameData();
             }
             var userGame = _userGames[userId];
 
-            // Обработка команды /start
+            
             if (messageText == "/start")
             {
                 Page page = new StartPage();
                 await page.View(bot, update.Message, userState);
                 userState.CurrentPage = "StartPage";
 
-                // Сбрасываем игровые данные при новом старте
                 _userGames[userId] = new UserGameData();
                 return;
             }
 
-            // Обработка результатов
+            
             if (messageText == "📊 Показать результаты")
             {
                 ResultsPage resultsPage = new ResultsPage();
@@ -77,26 +75,24 @@ namespace TgBot_Genius_Idiot
                 return;
             }
 
-            // Обработка ответов во время игры
+            
             if (userGame.IsWaitingForAnswer && userGame.CurrentQuestion != null)
             {
                 if (messageText == userGame.CurrentQuestion.RightAnswer)
                 {
                     userGame.CorrectAnswersCount++;
-                    await bot.SendMessage(chatId, "✅ +");
+                    await bot.SendMessage(chatId, "✅");
                 }
                 else
                 {
-                    await bot.SendMessage(chatId, $"❌ - (Правильный ответ: {userGame.CurrentQuestion.RightAnswer})");
+                    await bot.SendMessage(chatId, $"❌ (Правильный ответ: {userGame.CurrentQuestion.RightAnswer})");
                 }
-
-                // Удаляем отвеченный вопрос из общего списка
+                
                 questions.Remove(userGame.CurrentQuestion);
-
-                // Проверяем, кончились ли вопросы
+                
                 if (questions.Count == 0)
                 {
-                    // Сохраняем результат
+                    
                     var currentUser = new Game_geniusOrIdiot.User
                     {
                         Name = update.Message.From.Username ?? update.Message.From.FirstName,
@@ -110,12 +106,12 @@ namespace TgBot_Genius_Idiot
 
                     users.SaveRecord(currentUser);
 
-                    // Сбрасываем данные пользователя
+                    
                     _userGames[userId] = new UserGameData();
                 }
                 else
                 {
-                    // Отправляем следующий вопрос
+                    
                     randomInd = new Random().Next(0, questions.Count);
                     userGame.CurrentQuestion = questions[randomInd];
                     await bot.SendMessage(chatId,
@@ -148,32 +144,6 @@ namespace TgBot_Genius_Idiot
             message += "</pre>";
 
             return message;
-        }
-    }
-
-    // Класс для хранения игровых данных пользователя
-    public class UserGameData
-    {
-        public int CorrectAnswersCount { get; set; }
-        public bool IsWaitingForAnswer { get; set; }
-        public Question CurrentQuestion { get; set; }
-
-        public UserGameData()
-        {
-            CorrectAnswersCount = 0;
-            IsWaitingForAnswer = false;
-            CurrentQuestion = null;
-        }
-    }
-
-    public class UserState
-    {
-        public long UserId { get; set; }
-        public string CurrentPage { get; set; }
-
-        public UserState(long userId)
-        {
-            UserId = userId;
         }
     }
 }

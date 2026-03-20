@@ -20,7 +20,8 @@ namespace TgBot_Genius_Idiot
 
 
             public override async Task Handle(ITelegramBotClient botClient, Update update, UserState userState)
-            { }
+            {
+            }
         }
         
     }
