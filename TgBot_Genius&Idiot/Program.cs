@@ -14,8 +14,9 @@ namespace TgBot_Genius_Idiot
         static int randomInd;
         static int questionCount;
         static UserStorage users = new UserStorage();
+        static List<Question> currentQuestions;
 
-        
+
         private static Dictionary<long, UserGameData> _userGames = new Dictionary<long, UserGameData>();
         private static Dictionary<long, UserState> _userStates = new Dictionary<long, UserState>();
 
@@ -75,60 +76,21 @@ namespace TgBot_Genius_Idiot
                 return;
             }
 
-            
-            if (userGame.IsWaitingForAnswer && userGame.CurrentQuestion != null)
+            if (messageText == "🎮 Начать игру")
             {
-                if (messageText == userGame.CurrentQuestion.RightAnswer)
-                {
-                    userGame.CorrectAnswersCount++;
-                    await bot.SendMessage(chatId, "✅");
-                }
-                else
-                {
-                    await bot.SendMessage(chatId, $"❌ (Правильный ответ: {userGame.CurrentQuestion.RightAnswer})");
-                }
-                
-                questions.Remove(userGame.CurrentQuestion);
-                
-                if (questions.Count == 0)
-                {
-                    
-                    var currentUser = new Game_geniusOrIdiot.User
-                    {
-                        Name = update.Message.From.Username ?? update.Message.From.FirstName,
-                        CorrectAnswers = userGame.CorrectAnswersCount,
-                        Diagnosis = SayDiagnosis(userGame.CorrectAnswersCount, questionCount)
-                    };
 
-                    await bot.SendMessage(chatId,
-                        $"Игра завершена! Правильных ответов: {userGame.CorrectAnswersCount} из {questionCount}\n" +
-                        $"Ваш диагноз - {currentUser.Diagnosis}");
-
-                    users.SaveRecord(currentUser);
-
-                    
-                    _userGames[userId] = new UserGameData();
-                }
-                else
-                {
-                    
-                    randomInd = new Random().Next(0, questions.Count);
-                    userGame.CurrentQuestion = questions[randomInd];
-                    await bot.SendMessage(chatId,
-                        $"Вопрос {questionCount - questions.Count + 1} из {questionCount}:\n" +
-                        $"{userGame.CurrentQuestion.Text}");
-                }
+                PlayPage playPage = new PlayPage(questions, questionCount, _userGames);
+                userState.CurrentPage = "PlayPage";
+                await playPage.View(bot, update.Message, userState);
+                return;
             }
-        }
 
-        static string SayDiagnosis(int cnt, int len)
-        {
-            string[] diagnosises = { "Идиот", "Бездарь", "Дурак", "Человек Разумный", "Талант", "Гений" };
-            double percent = (double)cnt / len * 100;
-            int index = (int)(percent / 20);
-            
-            if (index >= diagnosises.Length) index = diagnosises.Length - 1;
-            return diagnosises[index];
+            if (userState.CurrentPage == "PlayPage")
+            {
+                PlayPage playPage = new PlayPage(questions, questionCount, _userGames);
+                await playPage.Handle(bot, update, userState);
+                return;
+            }
         }
 
         public static string GetSortedUsers(List<Game_geniusOrIdiot.User> userData)
