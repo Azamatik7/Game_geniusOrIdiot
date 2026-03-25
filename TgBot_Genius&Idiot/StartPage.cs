@@ -15,7 +15,8 @@ namespace TgBot_Genius_Idiot
                 var keyboard = new ReplyKeyboardMarkup(new[]
                 {
             new KeyboardButton[] { "🎮 Начать игру" },
-            new KeyboardButton[] { "📊 Показать результаты"}
+            new KeyboardButton[] { "📊 Показать результаты"},
+            new KeyboardButton[] { "Добавить вопрос" }
         })
                 {
                     ResizeKeyboard = true

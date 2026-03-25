@@ -3,6 +3,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using static TgBot_Genius_Idiot.Program;
 
 namespace TgBot_Genius_Idiot
 {
@@ -20,8 +21,13 @@ namespace TgBot_Genius_Idiot
         private static Dictionary<long, UserGameData> _userGames = new Dictionary<long, UserGameData>();
         private static Dictionary<long, UserState> _userStates = new Dictionary<long, UserState>();
 
+        private static Dictionary<long, PlayPage> _playPages = new Dictionary<long, PlayPage>();
+
+        private static Dictionary<long, AddQuestionPage> _addQuestionPages = new Dictionary<long, AddQuestionPage>();
+
         static async Task Main(string[] args)
         {
+
             var me = await bot.GetMe();
             Console.WriteLine($"Bot name is {me.FirstName}.");
 
@@ -76,19 +82,42 @@ namespace TgBot_Genius_Idiot
                 return;
             }
 
+
             if (messageText == "🎮 Начать игру")
             {
 
-                PlayPage playPage = new PlayPage(questions, questionCount, _userGames);
+                _playPages[userId] = new PlayPage(questions, questionCount, _userGames);
                 userState.CurrentPage = "PlayPage";
-                await playPage.View(bot, update.Message, userState);
+                await _playPages[userId].View(bot, update.Message, userState);
                 return;
             }
 
+
+
+            if (messageText == "Добавить вопрос")
+            {
+                _addQuestionPages[userId] = new AddQuestionPage();
+                userState.CurrentPage = "AddQuestionPage";
+                await _addQuestionPages[userId].View(bot, update.Message, userState);
+                return;
+            }
+
+
             if (userState.CurrentPage == "PlayPage")
             {
-                PlayPage playPage = new PlayPage(questions, questionCount, _userGames);
-                await playPage.Handle(bot, update, userState);
+                if (_playPages.ContainsKey(userId))
+                {
+                    await _playPages[userId].Handle(bot, update, userState);
+                }
+                return;
+            }
+
+            if (userState.CurrentPage == "AddQuestionPage")
+            {
+                if (_addQuestionPages.ContainsKey(userId))
+                {
+                    await _addQuestionPages[userId].Handle(bot, update, userState);
+                }
                 return;
             }
         }

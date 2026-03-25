@@ -12,6 +12,7 @@ namespace TgBot_Genius_Idiot
         private int questionCount;
         private Dictionary<long, UserGameData> _userGames;
         private UserStorage users = new UserStorage();
+        private int i = 1;
 
         public PlayPage(List<Question> allQuestions, int totalQuestionsCount, Dictionary<long, UserGameData> userGames)
         {
@@ -19,6 +20,8 @@ namespace TgBot_Genius_Idiot
             questionCount = totalQuestionsCount;
             _userGames = userGames;
         }
+        public PlayPage() { }
+        
 
         public override async Task View(ITelegramBotClient botClient, Message message, UserState userState)
         {
@@ -30,6 +33,9 @@ namespace TgBot_Genius_Idiot
             }
             var userGame = _userGames[userId];
 
+            userGame.RemainingQuestions = new List<Question>(currentQuestions);
+            userGame.TotalQuestions = questionCount;
+
             randomInd = new Random().Next(0, currentQuestions.Count);
             userGame.CurrentQuestion = currentQuestions[randomInd];
             userGame.IsWaitingForAnswer = true;
@@ -38,9 +44,10 @@ namespace TgBot_Genius_Idiot
             await botClient.SendMessage(
                 chatId: message.Chat.Id,
                 text: $"⏳ Игра началась! ⏳\n\n" +
-                      $"Вопрос 1 из {questionCount}:\n" +
+                      $"Вопрос {i} из {questionCount}:\n" +
                       $"{userGame.CurrentQuestion.Text}"
             );
+            i++;
         }
 
         public override async Task Handle(ITelegramBotClient botClient, Update update, UserState userState)
@@ -61,9 +68,9 @@ namespace TgBot_Genius_Idiot
                 await botClient.SendMessage(chatId, $"❌ (Правильный ответ: {userGame.CurrentQuestion.RightAnswer})");
             }
 
-            currentQuestions.Remove(userGame.CurrentQuestion);
+            userGame.RemainingQuestions.Remove(userGame.CurrentQuestion);
 
-            if (currentQuestions.Count == 0)
+            if (userGame.RemainingQuestions.Count == 0)
             {
                 var currentUser = new Game_geniusOrIdiot.User
                 {
@@ -71,6 +78,7 @@ namespace TgBot_Genius_Idiot
                     CorrectAnswers = userGame.CorrectAnswersCount,
                     Diagnosis = SayDiagnosis(userGame.CorrectAnswersCount, questionCount)
                 };
+                i = 0;
 
                 await botClient.SendMessage(chatId,
                     $"Игра завершена! Правильных ответов: {userGame.CorrectAnswersCount} из {questionCount}\n" +
@@ -81,11 +89,15 @@ namespace TgBot_Genius_Idiot
             }
             else
             {
-                randomInd = new Random().Next(0, currentQuestions.Count);
-                userGame.CurrentQuestion = currentQuestions[randomInd];
+                int randomInd = new Random().Next(0, userGame.RemainingQuestions.Count);
+                userGame.CurrentQuestion = userGame.RemainingQuestions[randomInd];
+
+                int currentQuestionNumber = userGame.TotalQuestions - userGame.RemainingQuestions.Count + 1;
+
                 await botClient.SendMessage(chatId,
-                    $"Вопрос {questionCount - currentQuestions.Count + 1} из {questionCount}:\n" +
+                    $"Вопрос {currentQuestionNumber} из {userGame.TotalQuestions}:\n" +
                     $"{userGame.CurrentQuestion.Text}");
+
             }
         }
 
