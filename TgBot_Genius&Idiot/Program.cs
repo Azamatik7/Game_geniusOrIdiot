@@ -1,6 +1,5 @@
 ﻿using Game_geniusOrIdiot;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using static TgBot_Genius_Idiot.Program;
@@ -23,6 +22,7 @@ namespace TgBot_Genius_Idiot
         private static Dictionary<long, PlayPage> _playPages = new Dictionary<long, PlayPage>();
 
         private static Dictionary<long, AddQuestionPage> _addQuestionPages = new Dictionary<long, AddQuestionPage>();
+        private static Dictionary<long, DeleteQuestionPage> _deleteQuestionPages = new Dictionary<long, DeleteQuestionPage>();
 
         static async Task Main(string[] args)
         {
@@ -76,11 +76,22 @@ namespace TgBot_Genius_Idiot
             
             if (messageText == "📊 Показать результаты")
             {
-                ResultsPage resultsPage = new ResultsPage(update.Message.From.Username);
-                await resultsPage.View(bot, update.Message, userState);
-                return;
-            }
+                if (update.Message.From.Username == null)
+                {
+                    ResultsPage resultsPage = new ResultsPage(update.Message.From.FirstName);
+                    await resultsPage.View(bot, update.Message, userState);
+                    return;
 
+                }
+                else
+                {
+
+                    ResultsPage resultsPage = new ResultsPage(update.Message.From.Username);
+                    await resultsPage.View(bot, update.Message, userState);
+                    return;
+                }
+                    
+            }
 
             if (messageText == "🎮 Начать игру")
             {
@@ -91,13 +102,19 @@ namespace TgBot_Genius_Idiot
                 return;
             }
 
-
-
             if (messageText == "Добавить вопрос")
             {
                 _addQuestionPages[userId] = new AddQuestionPage();
                 userState.CurrentPage = "AddQuestionPage";
                 await _addQuestionPages[userId].View(bot, update.Message, userState);
+                return;
+            }
+
+            if (messageText == "Удалить вопрос")
+            {
+                _deleteQuestionPages[userId] = new DeleteQuestionPage();
+                userState.CurrentPage = "DeleteQuestionPage";
+                await _deleteQuestionPages[userId].View(bot, update.Message, userState);
                 return;
             }
 
@@ -119,6 +136,15 @@ namespace TgBot_Genius_Idiot
                 }
                 return;
             }
+
+            if (userState.CurrentPage == "DeleteQuestionPage")
+            {
+                if (_deleteQuestionPages.ContainsKey(userId))
+                {
+                    await _deleteQuestionPages[userId].Handle(bot, update, userState);
+                }
+                return;
+            }
         }
 
         public static string GetSortedUsers(List<Game_geniusOrIdiot.User> userData)
@@ -135,5 +161,6 @@ namespace TgBot_Genius_Idiot
 
             return message;
         }
+
     }
 }

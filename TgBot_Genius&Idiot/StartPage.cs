@@ -16,7 +16,8 @@ namespace TgBot_Genius_Idiot
                 {
             new KeyboardButton[] { "🎮 Начать игру" },
             new KeyboardButton[] { "📊 Показать результаты"},
-            new KeyboardButton[] { "Добавить вопрос" }
+            new KeyboardButton[] { "Добавить вопрос" }, 
+            new KeyboardButton[] { "Удалить вопрос" }
         })
                 {
                     ResizeKeyboard = true
