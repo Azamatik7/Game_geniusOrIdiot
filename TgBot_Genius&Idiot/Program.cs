@@ -12,10 +12,9 @@ namespace TgBot_Genius_Idiot
         static TelegramBotClient bot = new TelegramBotClient("8709825825:AAF5GH_GzfchJZKaSlngaC4b-PVNe-He8U0");
 
         private static List<Question> questions;
-        static int randomInd;
         static int questionCount;
         static UserStorage users = new UserStorage();
-        static List<Question> currentQuestions;
+        
 
 
         private static Dictionary<long, UserGameData> _userGames = new Dictionary<long, UserGameData>();
@@ -77,7 +76,7 @@ namespace TgBot_Genius_Idiot
             
             if (messageText == "📊 Показать результаты")
             {
-                ResultsPage resultsPage = new ResultsPage();
+                ResultsPage resultsPage = new ResultsPage(update.Message.From.Username);
                 await resultsPage.View(bot, update.Message, userState);
                 return;
             }
